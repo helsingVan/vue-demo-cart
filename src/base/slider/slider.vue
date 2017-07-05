@@ -5,7 +5,8 @@
       </slot>
     </div>
     <div class="dots">
-      <span class="dot"></span>
+      <span class="dot" v-for="(value,index) in dots" 
+      :class="{active:sliderCurrentIndex===index}"></span>
     </div>
   </div>
 </template>
@@ -17,29 +18,109 @@ import { addClass } from 'common/js/dom';
 export default {
   name: 'slider',
   props: {
-  	// loop: {
-  	//   type: Boolean,
-  	//   default: true
-  	// },
-  	// autoPlay: {
-  	//   type: Boolean,
-  	//   default: true
-  	// },
-  	// interval: {
-  	//   type: Boolean,
-  	//   default: 4000
-  	// }
+  	loop: {
+  	  type: Boolean,
+  	  default() {
+  	  	return true;
+  	  }
+  	},
+  	autoPlay: {
+  	  type: Boolean,
+  	  default() {
+  	  	return true;
+  	  }
+  	},
+  	interval: {
+  	  type: Number,
+  	  default() {
+  	  	return 1000;
+  	  }
+  	}
+  },
+  data() {
+  	return {
+  	  dots: [],
+  	  slider: null,
+  	  sliderCurrentIndex: 0,
+  	  timer: null
+  	}
   },
   mounted() {
   	// 20ms 浏览器刷新代替nextTick
+  	const self = this;
   	setTimeout(()=>{
-
+  	  this._init();
+  	  this._initDots();
+  	  this._initSlider();
+  	  if(this.autoPlay) {
+  	  	this._autoPlay();
+  	  }
   	},20);
+
+  	window.addEventListener('resize',()=> {
+  	  if(self.slider == null) {
+  	  	return null;
+  	  }
+  	  self._init(true);
+  	  self.slider.refresh();
+  	})
   },
   methods: {
-  	_init() {
-
+  	_init(resize) {
+  	  let sliderItem = Array.from(this.$refs.sliderGroup.children);
+  	  let widthAll = 0;
+  	  let sliderWidth = this.$refs.slider.clientWidth;
+  	  sliderItem.forEach((v)=>{
+  	  	addClass(v,'slider-item');
+  	  	v.style.width = sliderWidth + 'px';
+  	  	widthAll += sliderWidth;
+  	  });
+  	  if(this.loop && !resize) {
+  	  	widthAll += sliderWidth*2;
+  	  }
+  	  this.$refs.sliderGroup.style.width = widthAll + 'px';
+  	},
+  	_initDots() {
+  	  let sliderItem = Array.from(this.$refs.sliderGroup.children);
+  	  this.dots = new Array(sliderItem.length);
+  	},
+  	_initSlider() {
+  	  let slider = this.$refs.slider;
+  	  const self = this;
+  	  this.slider = new BScroll(slider,{
+  	  	scrollX: true,
+  	  	scrollY: false,
+  	  	momentum: false,
+  	  	snap: true,
+  	  	snapLoop: self.loop,
+  	  	snapThreshold: 0.3,
+  	  	snapSpeed: 400
+  	  });
+  	  // scroll end
+  	  this.slider.on('scrollEnd',()=> {
+  	  	let sliderIndex = self.slider.getCurrentPage().pageX;
+  	  	if(self.loop) {
+  	  	  sliderIndex -= 1;
+  	  	}
+  	  	self.sliderCurrentIndex = sliderIndex;
+  	  	if(self.autoPlay) {
+  	  	  clearTimeout(self.timer);
+  	  	  self._autoPlay();
+  	  	}
+  	  });
+  	},
+  	_autoPlay() {
+  	  let sliderIndex = this.sliderCurrentIndex + 1;
+  	  if(this.loop) {
+  	  	sliderIndex += 1;
+  	  }
+  	  this.timer = setTimeout(()=> {
+  	  	this.slider.goToPage(sliderIndex,0,400);
+  	  },this.interval);
   	}
+  },
+  destroyed() {
+  	clearTimeout(this.timer);
   }
 }	
 </script>

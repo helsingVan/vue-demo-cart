@@ -4,7 +4,7 @@ function addClass(el,className) {
   }
   let newClass = el.className.split(' ');
   newClass.push(className);
-  return newClass.join(' ');
+  el.className = newClass.join(' ');
 }
 
 function hasClass(el,className) {

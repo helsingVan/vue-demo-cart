@@ -1,52 +1,85 @@
 <template>
   <div class="recommend">
-  	<div class="recommend-content">
-  	  <div class="slider-wrapper">
-  	  	<slider>
-  	  	  <div v-for="item in recommend">
-  	  	  	<a>
-  	  	  	  <img :src="item.picUrl" alt="">
-  	  	  	</a>
-  	  	  </div>
-  	  	</slider>
-  	  </div>
-  	  <div class="recommend-list">
-  	  	<h1 class="list-title">热门歌单推荐</h1>
-  	  	<ul>
-  	  		
-  	  	</ul>
-  	  </div>
-  	</div>
+  	<scroll class="recommend-content" :data="discList" ref="scrollComponent">
+	  <div>
+	  	  <div v-if="recommend.length" class="slider-wrapper">
+	  	  	<slider>
+	  	  	  <div v-for="item in recommend">
+	  	  	  	<a :href="item.linkUrl">
+	  	  	  	  <img :src="item.picUrl" alt="" @load="loadImage" class="needsclick">
+	  	  	  	</a>
+	  	  	  </div>
+	  	  	</slider>
+	  	  </div>
+	  	  <div class="recommend-list">
+	  	  	<h1 class="list-title">热门歌单推荐</h1>
+	  	  	<ul>
+	            <li v-for="item in discList" class="item">
+	              <div class="icon">
+	                <img width="60" height="60" v-lazy="item.imgurl">
+	              </div>
+	              <div class="text">
+	                <h2 class="name" v-html="item.creator.name"></h2>
+	                <p class="desc" v-html="item.dissname"></p>
+	              </div>
+	            </li>
+	  	  	</ul>
+	  	  </div>
+	  </div>
+	  <div class="loading-container" v-if="!discList.length">
+	  	<loading></loading>
+	  </div>
+  	</scroll>
   </div>
 </template>
 
 <script>
 import slider from 'base/slider/slider';
-import getJsonData from 'api/recommend';
+import scroll from 'base/scroll/scroll';
+import loading from 'base/loading/loading';
+import { getRecommend,getDiscList } from 'api/recommend';
 import { ERR_OK } from 'api/config';
 
 export default {
   name: 'recommend',
   components: {
-  	slider
+  	slider,
+  	scroll,
+  	loading
   },
   data() {
   	return {
-  	  recommend: []
+  	  recommend: [],
+  	  discList: []
   	}
   },
-  mounted() {
-  	this._init();
+  created() {
+  	this._getRecommend();
+  	this._getDiscList();
   },
   methods: {
-  	_init() {
+  	_getRecommend() {
   	  const self = this;
-  	  getJsonData().then((res)=>{
+  	  getRecommend().then((res)=>{
   	  	console.log(res);
   	  	if(res.code === ERR_OK) {
   	  	  self.recommend = res.data.slider;
   	  	}
-  	  })
+  	  });
+  	},
+  	_getDiscList() {
+  	  const self = this;
+  	  getDiscList().then((res)=> {
+  	  	if(res.code === ERR_OK) {
+  	  	  self.discList = res.data.list;
+  	  	}
+  	  });
+  	},
+  	loadImage() {
+  	  if(!this.imageLoading) {
+  	  	this.$refs.scrollComponent.refresh();
+  	  	this.imageLoading = true;
+  	  }
   	}
   }
 }
