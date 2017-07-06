@@ -23,6 +23,10 @@ export default {
   	data: {
   	  type: Array,
   	  default() { return null }
+  	},
+  	listenScroll: {
+  	  type: Boolean,
+  	  default: false
   	}
   },
   mounted() {
@@ -47,6 +51,12 @@ export default {
   	  	probeType: self.probeType,
   	  	click: self.click
   	  });
+
+  	  if(self.listenScroll) {
+  	  	self.scroll.on('scroll',(pos)=> {
+  	  	  self.$emit('scroll',pos);
+  	  	})
+  	  }
   	},
   	enable() {
   	  this.scroll && this.scroll.enable();

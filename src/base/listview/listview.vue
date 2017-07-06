@@ -1,5 +1,7 @@
 <template>
-  <scroll class="listview" :data="data" ref="listview">
+  <scroll class="listview" :data="data" ref="listview"
+  :listen-scroll="listenScroll" :probe-type="probeType"
+  @scroll="emitScroll">
   	<ul>
   	  <li v-for="group in data" class="list-group" ref="listgroup">
   	  	<h2 class="list-group-title">{{group.title}}</h2>
@@ -13,11 +15,18 @@
   	</ul>
   	<div class="list-shortcut">
   	  <ul>
-  	  	<li v-for="(item,index) in shortCutList" class="item" @touchstart="onShorCutTouchStart" @touchmove.stop.prevent="onShorCutTouchMove"
+  	  	<li v-for="(item,index) in shortCutList" class="item" @touchstart="onShorCutTouchStart" :class="{current:currentIndex==index}"
+  	  	@touchmove.stop.prevent="onShorCutTouchMove"
   	  	:data-index="index">
   	  	  {{item}}
   	  	</li>
   	  </ul>
+  	</div>
+  	<div class="list-fixed" v-show="fixedTitle">
+  	  <h1 class="fixed-title">{{fixedTitle}}</h1>
+  	</div>
+  	<div class="loading-container" v-show="!data.length">
+  	  <loading></loading>
   	</div>
   </scroll>
 </template>
@@ -25,12 +34,13 @@
 <script>
 import scroll from 'base/scroll/scroll';
 import { getData } from 'common/js/dom';
+import loading from 'base/loading/loading';
 
 const AnchorHeight = 18;
 
 export default {
   name: 'listview',
-  components: { scroll },
+  components: { scroll,loading },
   props: {
   	data: {
   	  type: Array,
@@ -40,13 +50,54 @@ export default {
   computed: {
   	shortCutList() {
   	  return this.data.map(v=>v.title.substring(0,1))
+  	},
+  	fixedTitle() {
+  	  if(this.scrollY > 0) {
+  	  	return false;
+  	  }
+  	  return this.data[this.currentIndex]?this.data[this.currentIndex].title:'';
+  	}
+  },
+  data() {
+  	return {
+  	  scrollY: -1,
+  	  currentIndex: 0
   	}
   },
   created() {
   	this.touch = {};
+  	this.listenScroll = true;
+  	this.listHeight = [0];
+  	this.probeType = 3;
   },
   mounted() {
+  	// this._calculateHeight();
+  },
+  watch: {
+  	data() {
+  	  this.$nextTick(()=> {
+  	  	this._calculateHeight();
+  	  });
+  	},
+  	scrollY(newY) {
+  	  const self = this;
+  	  const list = this.listHeight;
+  	  if(newY>=0) {
+  	  	this.currentIndex = 0;
+  	  	return null;
+  	  }
 
+  	  for(let i=0;i<list.length;i++) {
+  	  	let height1 = list[i];
+  	  	let height2 = list[i+1];
+  	  	if(!height2 || (-newY>height1 && -newY<height2)) {
+  	  	  self.currentIndex = i;
+  	  	  break;
+  	  	}
+  	  }
+  	  // console.log(self.currentIndex);
+
+  	}
   },
   methods: {
   	onShorCutTouchStart(e) {
@@ -54,9 +105,10 @@ export default {
   	  
   	  this.touch.y1 = e.touches[0].pageY;
   	  this.touch.touchIndex = touchIndex;
-
+  	  this.currentIndex = touchIndex;
+  	  
   	  this._scrollTo(touchIndex);
-  	  console.log(this.touch);
+  	  
   	},
   	onShorCutTouchMove(e) {
   	  this.touch.y2 = e.touches[0].pageY;
@@ -65,8 +117,22 @@ export default {
   	  // console.log(touchIndex);
   	  this._scrollTo(touchIndex);
   	},
+  	emitScroll(pos) {
+  	  this.scrollY = pos.y;
+  	  // console.log(pos)
+  	},
   	_scrollTo(index) {
+  	  // this.scrollY = -this.listHeight[index];
       this.$refs.listview.scrollToElement(this.$refs.listgroup[index],0);
+  	},
+  	_calculateHeight() {
+  	  const self = this;
+  	  const list = Array.from(this.$refs.listgroup);
+  	  let height = 0;
+  	  list.forEach((v)=> {	
+  	  	height += v.clientHeight;
+  	  	self.listHeight.push(height);
+  	  });
   	}
   }
 }
