@@ -12,4 +12,13 @@ function hasClass(el,className) {
   return reg.test(el.className);
 }
 
-export { addClass,hasClass };
+function getData(el,name,val) {
+  let prefixName = 'data-' + name;
+  if(val) {
+  	return el.setAttribute(prefixName,val);
+  }else {
+  	return el.getAttribute(prefixName);
+  }
+}
+
+export { addClass,hasClass,getData };
