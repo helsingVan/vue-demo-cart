@@ -45,16 +45,15 @@ export default {
   	  })
   	},
   	_normalizeSongs(list) {
-        let ret = []
+        let ret = [];
         list.forEach((item) => {
-          let {musicData} = item
+          let {musicData} = item;
           if (musicData.songid && musicData.albummid) {
-            ret.push(createSong(musicData))
+            ret.push(createSong(musicData));
           }
-        })
-        return ret
+        });
+        return ret;
     }
-    
   }
 }
 </script>
