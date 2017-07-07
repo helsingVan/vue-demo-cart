@@ -1,18 +1,77 @@
 <template>
   <div class="music-list">
   	<div class="back">
-  	  <i class="icon-back"></i>
+  	  <i class="icon-back" @click="goBack"></i>
   	</div>
-  	<h1 class="title"></h1>
-  	<div class="bg-image">
+  	<h1 class="title">{{title}}</h1>
+  	<div class="bg-image" :style="bgStyle" ref="bgImage">
+      <div class="play-wrapper">
+        <div class="play" v-show="songs.length>0">
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div>
   	  <div class="filter"></div>
   	</div>
+    <div class="bg-layer" ref="layer"></div>
+    <scroll :data="songs" class="list" ref="list">
+      <div class="song-list-wrapper">
+        <song-list :songs="songs"></song-list>
+      </div>
+      <div class="loading-container" v-show="!songs.length">
+        <loading></loading>
+      </div>
+    </scroll>
   </div>
 </template>
 
 <script>
+import scroll from 'base/scroll/scroll';
+import songList from 'base/song-list/song-list';
+import loading from 'base/loading/loading';
+
 export default {
-  name: 'music-list'
+  name: 'music-list',
+  components: {
+    scroll,
+    songList,
+    loading
+  },
+  props: {
+  	bgImage: {
+  	  type: String,
+  	  default: ''
+  	},
+  	songs: {
+  	  type: Array,
+  	  default() {
+        return [];
+      }
+  	},
+  	title: {
+  	  type: String,
+  	  default: ''
+  	}
+  },
+  mounted() {
+    this.$nextTick(()=> {
+      this.$refs.list['$el'].style.top = `${this.$refs.bgImage.clientHeight}px`;
+      // console.log(this.$refs.list['$el']);
+    })
+  },
+  computed: {
+    bgStyle() {
+      return `background-image:url(${this.bgImage})`;
+    },
+    setScrollTop() {
+        
+    }
+  },
+  methods: {
+    goBack() {
+      this.$router.back();
+    }
+  }
 }
 </script>
 
