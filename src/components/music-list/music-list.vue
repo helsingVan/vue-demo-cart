@@ -8,7 +8,7 @@
       <div class="play-wrapper">
         <div class="play" v-show="songs.length>0">
           <i class="icon-play"></i>
-          <span class="text">随机播放全部1</span>
+          <span class="text">随机播放全部2</span>
         </div>
       </div>
   	  <div class="filter"></div>
