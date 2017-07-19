@@ -1,5 +1,5 @@
 <template>
-  <div class="singer" ref="singer" id="yes">
+  <div class="singer" ref="singer" id="yes01">
     <list-view :data="singers" ref="list" @select="emitSelect"></list-view>
     <router-view></router-view>
   </div>
