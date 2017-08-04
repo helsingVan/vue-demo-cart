@@ -16,7 +16,7 @@
     <div class="bg-layer" ref="layer"></div>
     <scroll :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs" @select="selectItem"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -29,7 +29,7 @@
 import scroll from 'base/scroll/scroll';
 import songList from 'base/song-list/song-list';
 import loading from 'base/loading/loading';
-
+import {mapActions} from 'vuex';
 export default {
   name: 'music-list',
   components: {
@@ -70,7 +70,16 @@ export default {
   methods: {
     goBack() {
       this.$router.back();
-    }
+    },
+    selectItem(song,index) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions([
+        'selectPlay'
+      ])
   }
 }
 </script>

@@ -6,7 +6,8 @@ const state = {
   fullScreen: false,  // 全屏
   playList: [],
   sequenceList: [],
-  mode: playMode.sequence
+  mode: playMode.sequence,
+  currentIndex: -1
 };
 
 export default state;
