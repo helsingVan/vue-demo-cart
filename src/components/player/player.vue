@@ -35,8 +35,8 @@
 		  <span class="time time-r">{{currentSong.duration|formatTime}}</span>
 		</div>
   	  	<div class="operators">
-  	  	  <div class="icon i-left">
-  	  	  	<i class="icon-sequence"></i>
+  	  	  <div class="icon i-left" @click="changeMode">
+  	  	  	<i :class="iconMode"></i>
   	  	  </div>
   	  	  <div class="icon i-left" @click="prev" :class="disabledClass">
   	  	  	<i class="icon-prev"></i>
@@ -64,14 +64,17 @@
   	  	<p class="desc">{{currentSong.singer}}</p>
   	  </div>
   	  <div class="control">
-  	  	<i :class="miniPlayIcon" @click.stop="togglePlay"></i>
+        <progress-circle radius="32" :procent="persent">
+          <i :class="miniPlayIcon" @click.stop="togglePlay" class="icon-mini"></i>
+        </progress-circle>
+  	  	
   	  </div>
   	  <div class="control" @click="open">
   	  	<i class="icon-playlist"></i>
   	  </div>
   	</div>
   	</transition>
-  	<audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+  	<audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" :ended="end"></audio>
   </div>
 </template>
 
@@ -80,13 +83,16 @@
   import animations from 'create-keyframe-animation';
   import {prefixStyle} from 'common/js/dom'
   import progressBar from 'base/progressbar/progressbar';
+  import progressCircle from 'base/progressbar/progresscircle';
+  import {playMode} from 'common/js/config';
+  import { shuffle } from 'common/js/util';
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
 
   export default {
   	name: 'player',
-  	components: {progressBar},
+  	components: {progressBar,progressCircle},
   	data() {
   	  return {
   	  	songReady: false,
@@ -94,6 +100,9 @@
   	  }
   	},
   	computed: {
+      iconMode() {
+        return this.mode === playMode.sequence? 'icon-sequence':this.mode === playMode.loop? 'icon-loop': 'icon-random';
+      },
   	  playIcon() {
   	  	return this.playing?'icon-pause':'icon-play';
   	  },
@@ -114,7 +123,9 @@
           'playList',
           'currentSong',
           'playing',
-          'currentIndex'
+          'currentIndex',
+          'mode',
+          'sequenceList'
   	  	])
   	},
   	methods: {
@@ -222,20 +233,55 @@
       updateTime(e) {
       	this.currentTime = e.target.currentTime;
       },
+      end() {
+        if(this.mode === playMode.loop) {
+          this.loop();
+        }else {
+          this.next();
+        }
+      },
+      loop() {
+        this.$refs.audio.currentTime = 0;
+        this.$refs.audio.play();
+      },
       onProgressChange(precent) {
       	this.$refs.audio.currentTime = this.currentSong.duration*precent;
       	if(!this.playing) {
       	  this.togglePlay();
       	}
       },
+      changeMode() {
+        const mode = (this.mode + 1) % 3;
+        this.setMode(mode);
+        let list = null;
+        if(mode === playMode.random) {
+          list = shuffle(this.sequenceList);
+        }else {
+          list = this.sequenceList;
+        }
+        this.resetCurrentIndex(list);
+        this.setPlayList(list);
+      },
+      resetCurrentIndex(list) {
+        const self = this;
+        let index = list.findIndex((item)=> {
+          return item.id === self.currentSong.id;
+        });
+        this.setCurrentIndex(index);
+      },
   	  ...mapMutations({
   	  	  setFullScreen: 'SET_FULLSCREEN',
   	  	  setPlaying: 'SET_PLAYING',
-  	  	  setCurrentIndex: 'SET_CURRENTINDEX'
+  	  	  setCurrentIndex: 'SET_CURRENTINDEX',
+          setMode: 'SET_MODE',
+          setPlayList: 'SET_PLAYLIST'
   	  })
   	},
   	watch: {
-  	  currentSong() {
+  	  currentSong(newSong,oldSong) {
+        if(newSong.id === oldSong.id) {
+          return null;
+        }
   	  	this.$nextTick(()=> {
   	  	  this.$refs.audio.play();
   	  	})
