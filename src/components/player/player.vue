@@ -25,6 +25,13 @@
   	  	  	</div>
   	  	  </div>
   	  	</div>
+        <div class="middle-r" ref="lyricList">
+          <div class="lyric-wrapper">
+            <div v-if="currentLyric">
+              <p ref="lyricLine" class="text" v-for="line in currentLyric.lines">{{line.txt}}</p>
+            </div>
+          </div>
+        </div>
   	  </div>
   	  <div class="bottom">
 		<div class="progress-wrapper">
@@ -86,6 +93,7 @@
   import progressCircle from 'base/progressbar/progresscircle';
   import {playMode} from 'common/js/config';
   import { shuffle } from 'common/js/util';
+  import Lyric from 'lyric-parser';
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
@@ -96,7 +104,8 @@
   	data() {
   	  return {
   	  	songReady: false,
-  	  	currentTime: 0
+  	  	currentTime: 0,
+        currentLyric: null
   	  }
   	},
   	computed: {
@@ -269,6 +278,12 @@
         });
         this.setCurrentIndex(index);
       },
+      getLyric() {
+        this.currentSong.getLyric().then((res)=> {
+          this.currentLyric = new Lyric(res);
+          console.log(this.currentLyric);
+        })
+      },
   	  ...mapMutations({
   	  	  setFullScreen: 'SET_FULLSCREEN',
   	  	  setPlaying: 'SET_PLAYING',
@@ -284,6 +299,7 @@
         }
   	  	this.$nextTick(()=> {
   	  	  this.$refs.audio.play();
+          this.getLyric();
   	  	})
   	  },
   	  playing(flag) {

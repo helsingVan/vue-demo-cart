@@ -2,9 +2,23 @@ import * as types from './mutation-type';
 import { playMode } from 'common/js/config';
 import {shuffle} from 'common/js/util';
 
+function findIndex(list,song) {
+  return list.findIndex((item)=> {
+  	return item.id === song.id;
+  })
+}
+
 const selectPlay = ({commit,state},{list,index}) => {
   commit(types.setSequenceList,list);
-  commit(types.setPlayList,list);
+
+  if(state.mode === playMode.random) {
+  	// 随机播放
+  	let randomList = shuffle(list);
+  	commit(types.setPlayList,randomList);
+  	index = findIndex(randomList,list[index]);
+  }else {
+  	commit(types.setPlayList,list);
+  }
   commit(types.setCurrentIndex,index);
   commit(types.setFullScreen,true);
   commit(types.setPlaying,true);
