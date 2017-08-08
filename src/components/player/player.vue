@@ -17,30 +17,36 @@
   	  	<h1 class="title">{{currentSong.name}}</h1>
   	  	<h2 class="subtitle">{{currentSong.singer}}</h2>
   	  </div>
-  	  <div class="middle">
-  	  	<div class="middle-l">
+  	  <div class="middle" @touchstart.prevent="middleTouchStart"
+      @touchmove.prevent="middleTouchMove" @touchend="middleTouchEnd">
+  	  	<div class="middle-l" ref="middleL">
   	  	  <div class="cd-wrapper" ref="cdWrapper">
   	  	  	<div class="cd" :class="cdClass">
   	  	  	  <img alt="" class="image" :src="currentSong.image" >
   	  	  	</div>
   	  	  </div>
   	  	</div>
-        <div class="middle-r" ref="lyricList">
+        <scroll class="middle-r" ref="lyricList" :data="currentLyric&&currentLyric.lines">
           <div class="lyric-wrapper">
             <div v-if="currentLyric">
-              <p ref="lyricLine" class="text" v-for="line in currentLyric.lines">{{line.txt}}</p>
+              <p ref="lyricLine" class="text" 
+              :class="{current:currentLineNum === index}" v-for="(line,index) in currentLyric.lines">{{line.txt}}</p>
             </div>
           </div>
-        </div>
+        </scroll>
   	  </div>
   	  <div class="bottom">
-		<div class="progress-wrapper">
+        <div class="dot-wrapper">
+          <span class="dot" :class="{active:currentShow==='cd'}"></span>
+          <span class="dot" :class="{active:currentShow==='lyric'}"></span>
+        </div>
+		    <div class="progress-wrapper">
 		  <span class="time time-l">{{currentTime|formatTime}}</span>
 		  <div class="progress-bar-wrapper">
 		  	<progress-bar :persent="persent" @precentChange="onProgressChange"></progress-bar>
 		  </div>
 		  <span class="time time-r">{{currentSong.duration|formatTime}}</span>
-		</div>
+		  </div>
   	  	<div class="operators">
   	  	  <div class="icon i-left" @click="changeMode">
   	  	  	<i :class="iconMode"></i>
@@ -94,18 +100,22 @@
   import {playMode} from 'common/js/config';
   import { shuffle } from 'common/js/util';
   import Lyric from 'lyric-parser';
+  import Scroll from 'base/scroll/scroll';
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
 
   export default {
   	name: 'player',
-  	components: {progressBar,progressCircle},
+  	components: {progressBar,progressCircle,Scroll},
   	data() {
   	  return {
   	  	songReady: false,
   	  	currentTime: 0,
-        currentLyric: null
+        currentLyric: null,
+        currentLineNum: 0,
+        currentShow: 'cd',
+        touch: {}
   	  }
   	},
   	computed: {
@@ -138,6 +148,57 @@
   	  	])
   	},
   	methods: {
+      middleTouchStart(e) {
+        this.touch.init = true;
+        const touch = e.touches[0];
+        this.touch.startX = touch.pageX;
+        this.touch.startY = touch.pageY;
+      },
+      middleTouchMove(e) {
+        if(!this.touch.init) {
+          return null;
+        }
+        const touch = e.touches[0];
+        const moveX = touch.pageX - this.touch.startX;
+        const moveY = touch.pageY - this.touch.startY;
+        if(Math.abs(moveY) > Math.abs(moveX)) {
+          return null;
+        }
+        const left = this.currentShow === 'cd'?0:-window.innerWidth;
+        const width = Math.min(0,Math.max(-window.innerWidth,left+moveX));
+        this.touch.percent = Math.abs(width/window.innerWidth);
+        this.$refs.lyricList.$el.style[transform] = `translate3d(${width}px,0,0)`;
+        this.$refs.lyricList.$el.style[transitionDuration] = 0;
+        this.$refs.middleL.style.opacity = 1 - this.touch.percent;
+        this.$refs.middleL.style[transitionDuration] = 0;
+      },
+      middleTouchEnd() {
+        let offsetWidth;
+        let opacity;
+        if(this.currentShow === 'cd') {
+          if(this.touch.percent > 0.1) {
+            offsetWidth = -window.innerWidth;
+            opacity = 0;
+            this.currentShow = 'lyric';
+          }else {
+            offsetWidth = 0;
+            opacity = 1;
+          }
+        }else {
+          if(this.touch.percent < 0.9) {
+            offsetWidth = 0;
+            opacity = 1;
+            this.currentShow = 'cd';
+          }else {
+            offsetWidth = -window.innerWidth;
+            opacity = 0;
+          }
+        }
+        this.$refs.lyricList.$el.style[transform] = `translateX(${offsetWidth}px)`;
+        this.$refs.lyricList.$el.style[transitionDuration] = '300ms';
+        this.$refs.middelL.style.opacity = opacity;
+        this.$refs.middelL.style[transitionDuration] = '300ms';
+      },
   	  back() {
   	  	this.setFullScreen(false);
   	  },
@@ -280,9 +341,21 @@
       },
       getLyric() {
         this.currentSong.getLyric().then((res)=> {
-          this.currentLyric = new Lyric(res);
+          this.currentLyric = new Lyric(res,this.handleLyric);
+          if(this.playing) {
+            this.currentLyric.play();
+          }
           console.log(this.currentLyric);
         })
+      },
+      handleLyric({lineNum,txt}) {
+        this.currentLineNum = lineNum;
+        if(lineNum > 5) {
+          let lineEl = this.$refs.lyricLine[lineNum - 5];
+          this.$refs.lyricList.scrollToElement(lineEl,1000);
+        }else {
+          this.$refs.lyricList.scrollTo(0,0,1000);
+        }
       },
   	  ...mapMutations({
   	  	  setFullScreen: 'SET_FULLSCREEN',
