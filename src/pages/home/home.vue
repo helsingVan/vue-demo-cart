@@ -49,7 +49,7 @@ export default {
   	    this.slider = data.data.slider;
   	  });
       getRank().then((data) => {
-        console.log(data);
+     
         if(data.code !== 0) {
           return;
         }

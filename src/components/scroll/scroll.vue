@@ -29,7 +29,6 @@ export default {
 <style lang="less">
 
   .scroll {
-	  height: 100%;
     overflow: hidden;
   }
 </style>
