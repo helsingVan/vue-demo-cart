@@ -71,10 +71,11 @@ export default {
 @import "../../common/less/mixin";
   
   .scroll-container {
-    position: fixed;
+    position: absolute;
     width:100%;
     top: 80/@rem;
     bottom: 0;
+    z-index: 100;
   }
   .home-container {
     padding: 0 30/@rem;

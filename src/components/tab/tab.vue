@@ -38,7 +38,7 @@ export default {
   	display: flex;
   	justify-content: center;
   	align-items: center;
-    position: relative;
+    
   	a {
   	  height: 80/@rem;
   	  line-height: 80/@rem;
