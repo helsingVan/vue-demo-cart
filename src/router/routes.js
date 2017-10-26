@@ -17,9 +17,16 @@ const Search = (resolve) => {
   });
 };
 
+const Rank = (resolve) => {
+  import('@/pages/rank/rank').then((module) => {
+    resolve(module);
+  });
+}
 const routes = [
 	{path:'/',redirect:'/home'},
-	{path:'/home',name:'Home',component:Home},
+	{path:'/home',name:'Home',component:Home,children:[
+    {path: 'rank/:id',name: 'Rank',component: Rank}
+  ]},
 	{path:'/singer',name:'Singer',component:Singer},
 	{path:'/search',name:'Search',component:Search}
 ];

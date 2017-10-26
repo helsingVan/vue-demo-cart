@@ -80,7 +80,7 @@ Slider.prototype = {
     	}else {
     		this.loopNum--;
     	}
-    	console.log(this.loopNum);
+    	
     	this.sliderUl.style.transition = `all .5s`;
     	const translate = this.sliderItemWidth * this.loopNum;
     	this.sliderUl.style.transform = `translateX(-${translate}px)`;
