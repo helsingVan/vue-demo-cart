@@ -4,7 +4,7 @@
   	  <h2 class="title">{{singerHot.title}}</h2>
 	  <v-scroll :scrollX="true">
 	  	<ul class="clearfix">
-	  		<li v-for="item in singerHot.items" class="item">
+	  		<li v-for="item in singerHot.items" class="item" @click="toSingerDetail(item.id)">
 	  		  <figure>
 	  		  	<img :src="item.avatar" alt="">
 	  		  	<figcaption class="name">{{item.name}}</figcaption>
@@ -15,7 +15,7 @@
   	</section>
   	<section class="singer-classify">
   	  <h2 class="title">分类</h2>
-  	  <aside class="sidebar" @touchmove="prevent">
+  	  <aside class="sidebar">
   	  	<ul>
   	  		<li v-for="item in singerListSub">{{item.title}}</li>
   	  	</ul>
@@ -36,6 +36,7 @@
   	  	</v-scroll>
   	  </div>
   	</section>
+  	<router-view/>
   </div>
 </template>
 
@@ -122,8 +123,11 @@ export default {
         });
         return hot.concat(ret);
     },
-    prevent() {
-    	// return false;
+    toSingerDetail(id) {
+    	console.log(id);
+      this.$router.push({
+      	path: `/singer/${id}`
+      });
     }
   },
   components: { vScroll }

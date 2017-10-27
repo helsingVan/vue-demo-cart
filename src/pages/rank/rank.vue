@@ -1,6 +1,6 @@
 <template>
   <transition name="slideRight">
-  	<div class="rank">
+  	<div class="rank slide-page">
 	  <header class="header">
 	  	<h1>{{topInfo.ListName}}</h1>
 	  	<span class="iconfont icon-back back" @click="back"></span>
@@ -19,7 +19,6 @@
 		  	</ul>
 		  </v-scroll>
 	  </section>
-	  
 	</div>
   </transition>
   
@@ -53,7 +52,6 @@ export default {
   	  	if(data.code !== 0) {
   	  		return;
   	  	}
-  	  	console.log(data);
   	  	this.topInfo = data.topinfo;
   	  	this.songs = this._normalizeSongs(data.songlist);
   	  	console.log(this.songs);
@@ -80,23 +78,7 @@ export default {
 <style lang="less">
 @import "../../common/less/mixin";
   
-  .slideRight-enter-active,
-  .slideRight-leave-active {
-  	transition: all .5s ease;
-  }
-  .slideRight-enter,
-  .slideRight-leave-to {
-  	transform: translate3d(100%, 0, 0);
-  }
   .rank {
-	position: fixed;
-	width: 100%;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #fff;
-	z-index: 1000;
 	.header {
 	  position: absolute;
 	  top: 0;
