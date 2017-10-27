@@ -1,17 +1,31 @@
 
-export default class Song {
+// 歌手类
+class Song {
   constructor({id, mid, singer, name, album, duration, image, url}) {
-    this.id = id
-    this.mid = mid
-    this.singer = singer
-    this.name = name
-    this.album = album
-    this.duration = duration
-    this.image = image
-    this.url = url
+    this.id = id;
+    this.mid = mid;
+    this.singer = singer;
+    this.name = name;
+    this.album = album;
+    this.duration = duration;
+    this.image = image;
+    this.url = url;
   }
 }
 
+// 歌手名字处理
+function filterSinger(singer) {
+  let ret = [];
+  if (!singer) {
+    return '';
+  }
+  singer.forEach((s) => {
+    ret.push(s.name);
+  })
+  return ret.join('/');
+}
+
+// 对歌手数据进行提取，返回对象
 export function createSong(musicData) {
   return new Song({
     id: musicData.songid,
@@ -25,13 +39,3 @@ export function createSong(musicData) {
   })
 }
 
-function filterSinger(singer) {
-  let ret = []
-  if (!singer) {
-    return ''
-  }
-  singer.forEach((s) => {
-    ret.push(s.name)
-  })
-  return ret.join('/')
-}

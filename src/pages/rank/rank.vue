@@ -6,24 +6,27 @@
 	  	<span class="iconfont icon-back back" @click="back"></span>
 	  </header>
 	  <div class="banner" :style="bgImage"></div>
-	  <v-scroll class="rank-list">
-	  	<ul>
-	  		<li v-for="item,index in songs" class="clearfix">
-	  		  <div class="index">{{index+1}}</div>
-			  <div class="content">
-			  	<p class="name">{{item.name}}</p>
-			  	<p class="singer">{{item.singer}}</p>
-			  </div>
-	  		</li>
-	  	</ul>
-	  </v-scroll>
+	  <section class="rank-list">
+	  	<v-scroll>
+		  	<ul>
+		  		<li v-for="item,index in songs" class="clearfix">
+		  		  <div class="index">{{index+1}}</div>
+				  <div class="content">
+				  	<p class="name">{{item.name}}</p>
+				  	<p class="singer">{{item.singer}}</p>
+				  </div>
+		  		</li>
+		  	</ul>
+		  </v-scroll>
+	  </section>
+	  
 	</div>
   </transition>
   
 </template>
 
 <script>
-import { getRankList } from '@/api/request';
+import { getRankDetail } from '@/api/musicRequest';
 import { createSong } from '@/common/js/song';
 import vScroll from '@/components/scroll/scroll';
 
@@ -45,9 +48,8 @@ export default {
   	this.getData();
   },
   methods: {
-  	getData() {
-  	  
-  	  getRankList(this.$route.params.id).then((data) => {
+  	getData() {  
+  	  getRankDetail(this.$route.params.id).then((data) => {
   	  	if(data.code !== 0) {
   	  		return;
   	  	}

@@ -1,31 +1,35 @@
 <template>
-  <v-scroll class="scroll-container">
-    <div class="content">
-      <section class="slider-box" v-if="slider.length>0">
-        <v-slider>
-          <ul class="clearfix">
-            <li v-for="item in slider">
-              <a :href="item.linkUrl">
-                <img :src="item.picUrl" alt="">
-              </a>
+  <div class="main home">
+    <v-scroll>
+      <div class="content">
+        <section class="slider-box" v-if="slider.length>0">
+          <v-slider>
+            <ul class="clearfix">
+              <li v-for="item in slider">
+                <a :href="item.linkUrl">
+                  <img :src="item.picUrl" alt="">
+                </a>
+              </li>
+            </ul>
+          </v-slider>
+        </section>
+        <section class="rank-container">
+          <ul class="home-rank">
+            <li v-for="item in topList" @click="toRank(item.id)">
+              <v-figure :data="item"></v-figure>
             </li>
           </ul>
-        </v-slider>
-      </section>
-      <section class="home-container">
-        <ul class="home-rank">
-          <li v-for="item in topList" @click="toRank(item.id)">
-            <v-figure :figureData="item"></v-figure>
-          </li>
-        </ul>
-      </section>
-    </div>
+        </section>
+      </div>
+      
+    </v-scroll>
     <router-view/>
-  </v-scroll>
+  </div>
+  
 </template>
 
 <script>
-import { getSlider, getRank } from '@/api/request';
+import { getSlider, getRankList } from '@/api/musicRequest';
 import vSlider from '@/components/slider/slider';
 import vFigure from '@/components/figure/figure-rank';
 import vScroll from '@/components/scroll/scroll';
@@ -40,15 +44,15 @@ export default {
   	this.getData();
   },
   methods: {
+    // 页面初始化数据
   	getData() {
   	  getSlider().then((data)=>{
-  	  	// console.log(data);
   	    if(data.code !== 0) {
   	      return;
   	    }
   	    this.slider = data.data.slider;
   	  });
-      getRank().then((data) => {
+      getRankList().then((data) => {
      
         if(data.code !== 0) {
           return;
@@ -56,6 +60,7 @@ export default {
         this.topList = data.data.topList;
       })
   	},
+    // 跳转对应排行详情
     toRank(id) {
       console.log(id);
       this.$router.push({
@@ -70,14 +75,10 @@ export default {
 <style lang="less">
 @import "../../common/less/mixin";
   
-  .scroll-container {
-    position: absolute;
-    width:100%;
-    top: 80/@rem;
-    bottom: 0;
-    z-index: 100;
+  .home {
+    top: 100/@rem;
   }
-  .home-container {
+  .rank-container {
     padding: 0 30/@rem;
 
 

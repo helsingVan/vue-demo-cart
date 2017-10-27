@@ -8,6 +8,12 @@
 import IScroll from 'better-scroll';
 
 export default {
+  props: {
+    scrollX: {
+      type: Boolean,
+      default() { return false;}
+    }
+  },
   mounted() {
   	const self = this;
   	setTimeout(()=>{
@@ -16,8 +22,10 @@ export default {
   },
   methods: {
   	init() {
+      const self = this;
   	  this.$nextTick(()=> {
   	  	this.scroller = new IScroll(this.$el,{
+          scrollX: self.scrollX,
   	  		click: true
   	  	});
   	  });
@@ -29,6 +37,7 @@ export default {
 <style lang="less">
 
   .scroll {
+    height: 100%;
     overflow: hidden;
   }
 </style>

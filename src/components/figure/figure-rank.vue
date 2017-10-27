@@ -1,9 +1,9 @@
 <template>
   <figure class="clearfix figure-rank">
-  	<img :src="figureData.picUrl" alt="">
+  	<img :src="data.picUrl" alt="">
   	<figcaption>
   	  <ul>
-  	  	<li v-for="item,index in figureData.songList">
+  	  	<li v-for="item,index in data.songList">
   	  	  <span>{{index+1}}</span>
   	  	  <span>{{item.songname}}</span>
   	  	  -
@@ -17,7 +17,7 @@
 <script>
 export default {
   props: {
-  	figureData: {}
+  	data: {}
   }
 }
 </script>

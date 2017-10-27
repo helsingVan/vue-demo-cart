@@ -2,6 +2,7 @@
   <nav class="tab">
   	<a href="javasript:;" v-for="item,index in tabData"
     @click="goTo(index,item.url)" :class="{active:activeIndex===index}">{{item.text}}</a>
+    <!-- <router-link v-for="item,index in tabData" :to="item.url">{{item.text}}</router-link> -->
     <span class="active-bar" ref="activeBar"></span>
   </nav>
 </template>
@@ -13,7 +14,7 @@ export default {
       tabData: [
         {text: 'HOME',url: '/home'},
         {text: 'SINGER',url: '/singer'},
-        {text: 'SEARCH',url: '/SEARCH'}
+        {text: 'SEARCH',url: '/search'}
       ],
       activeIndex: 0
     }
@@ -27,6 +28,10 @@ export default {
       this.activeIndex = index;
       this.$router.push({path: url});
     }
+  },
+  beforeRouteUpdate(to,from,next) {
+    console.log('to',to);
+    console.log('from',from);
   }
 }
 </script>
@@ -38,7 +43,7 @@ export default {
   	display: flex;
   	justify-content: center;
   	align-items: center;
-    
+    position: relative;
   	a {
   	  height: 80/@rem;
   	  line-height: 80/@rem;
