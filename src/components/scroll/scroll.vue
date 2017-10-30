@@ -12,6 +12,14 @@ export default {
     scrollX: {
       type: Boolean,
       default() { return false;}
+    },
+    scrollListener: {
+      type: Boolean,
+      default() { return false;}
+    },
+    probeType: {
+      type: Number,
+      default() { return 0;}
     }
   },
   mounted() {
@@ -25,11 +33,22 @@ export default {
       const self = this;
   	  this.$nextTick(()=> {
   	  	this.scroller = new IScroll(this.$el,{
+          probeType: self.probeType,
           scrollX: self.scrollX,
   	  		click: true
   	  	});
+        console.log(this.scrollListener);
+        if(this.scrollListener) {
+          this.scroller.on('scroll',(pos)=> {
+            self.$emit('scroll',pos);
+          });
+        }
+
   	  });
-  	}
+  	},
+    scrollToElement() {
+      this.scroller && this.scroller.scrollToElement.apply(this.scroller,arguments);
+    }
   }
 }
 </script>

@@ -16,14 +16,14 @@
   	<section class="singer-classify">
   	  <h2 class="title">分类</h2>
   	  <aside class="sidebar">
-  	  	<ul>
-  	  		<li v-for="item in singerListSub">{{item.title}}</li>
+  	  	<ul @touchstart="classifySelect" @touchmove="classifyMove">
+  	  		<li v-for="item,index in singerListSub" :data-index="index" :class="{active:selectActiveIndex == index}" ref="sideBarList">{{item.title}}</li>
   	  	</ul>
   	  </aside>
   	  <div class="scroll-box">
-  	  	<v-scroll>
-  	  	  <ul>
-  	  	  	<li v-for="list in singerListSub">
+  	  	<v-scroll :scrollListener="true" @scroll="scroll" :probeType="3" ref="classifyScroller">
+  	  	  <ul ref="singerListEl">
+  	  	  	<li v-for="list in singerListSub" ref="listGroup">
   	  	  	  <h3 class="classify-title">{{list.title}}</h3>
   	  	  	  <ul class="singer">
   	  	  	  	<li v-for="item in list.items">
@@ -57,7 +57,12 @@ class Singer {
 export default {
   data() {
   	return {
-  	  singerList: []
+  	  singerList: [],
+      selectActiveIndex: 0,
+      sideBarIntervalHeight: 0,
+      touch: {},
+      listGroupHeightList: [0],
+      scrollY: 0
   	}
   },
   computed: {
@@ -70,6 +75,24 @@ export default {
   },
   created() {
   	this.getData();
+  },
+  mounted() {
+    this.caculateHeight();
+  },
+  watch: {
+    scrollY(newY) {
+      if(newY > 0) {
+        this.selectActiveIndex = 0;
+        return;
+      }
+      const heightList = this.listGroupHeightList;
+      for(let i = 0;i < heightList.length; i++) {
+        if(-newY >= heightList[i] && -newY < heightList[i+1]) {
+          this.selectActiveIndex = i;
+          break;
+        }
+      }
+    }
   },
   methods: {
   	getData() {
@@ -128,6 +151,42 @@ export default {
       	path: `/singer/${item.id}`
       });
       this.setSinger(item);
+    },
+    caculateHeight() {
+      setTimeout(()=>{
+        this.sideBarIntervalHeight = this.$refs.sideBarList[0].offsetHeight;
+        
+        const listGroup = this.$refs.listGroup;
+        let height = 0;
+        listGroup.forEach((v)=> {
+          height += v.offsetHeight;
+          this.listGroupHeightList.push(height);
+        });
+      },20);
+    },
+    scroll(pos) {
+      this.scrollY = pos.y;
+      console.log(this.scrollY);
+    },
+    classifySelect(e) {
+      const selectIndex = e.target.dataset.index;
+      this.selectActiveIndex = selectIndex;
+      this.touch.startY = e.touches[0].pageY;
+      this.touch.startIndex = selectIndex;
+      this._scrollTo(selectIndex);
+    },
+    classifyMove(e) {
+      let startY = this.touch.startY;
+      let endY = this.touch.endY = e.touches[0].pageY;
+      let delta = (endY - startY)/this.sideBarIntervalHeight | 0;
+      let selectIndex = parseInt(this.touch.startIndex,10) + delta;
+      this.selectActiveIndex = selectIndex;
+      this._scrollTo(selectIndex);
+    },
+    _scrollTo(selectIndex) {
+      const classifyScroller = this.$refs.classifyScroller;
+      const listGroup = this.$refs.listGroup;
+      classifyScroller.scrollToElement(listGroup[selectIndex],0);
     },
     ...mapMutations({
       setSinger: 'SET_SINGER'
@@ -193,7 +252,11 @@ export default {
   	  li {
   	  	width: 40/@rem;
   	  	text-align: center;
-  	  	padding: 2/@rem;
+  	  	height: 36/@rem;
+        line-height: 36/@rem;
+        &.active {
+          color: @themeColor;
+        }
   	  }
   	}
   	.scroll-box {
