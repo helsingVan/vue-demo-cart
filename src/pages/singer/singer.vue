@@ -21,6 +21,9 @@
   	  	</ul>
   	  </aside>
   	  <div class="scroll-box">
+        <header class="fix-title classify-title" v-show="fixTitle" ref="fixTitleEl">
+          <h3>{{fixTitle}}</h3>
+        </header>
   	  	<v-scroll :scrollListener="true" @scroll="scroll" :probeType="3" ref="classifyScroller">
   	  	  <ul ref="singerListEl">
   	  	  	<li v-for="list in singerListSub" ref="listGroup">
@@ -62,7 +65,9 @@ export default {
       sideBarIntervalHeight: 0,
       touch: {},
       listGroupHeightList: [0],
-      scrollY: 0
+      scrollY: 0,
+      fixDelta: 0,
+      fixTitleHeight: 119
   	}
   },
   computed: {
@@ -71,7 +76,13 @@ export default {
   	},
   	singerListSub() {
   	  return this.singerList.slice(1);
-  	}
+  	},
+    fixTitle() {
+      if(this.scrollY >= 0) {
+        return '';
+      }
+      return this.singerListSub?this.singerListSub[this.selectActiveIndex].title:'';
+    }
   },
   created() {
   	this.getData();
@@ -86,7 +97,7 @@ export default {
         return;
       }
       const heightList = this.listGroupHeightList;
-      for(let i = 0;i < heightList.length; i++) {
+      for(let i = 0;i < heightList.length - 1; i++) {
         if(-newY >= heightList[i] && -newY < heightList[i+1]) {
           this.selectActiveIndex = i;
           break;
@@ -101,7 +112,6 @@ export default {
   	  		return;
   	  	}
   	  	this.singerList = this._normalizeSinger(data.data.list);
-  	  	console.log(this.singerList);
   	  });
   	},
   	_normalizeSinger(list) {
@@ -155,7 +165,6 @@ export default {
     caculateHeight() {
       setTimeout(()=>{
         this.sideBarIntervalHeight = this.$refs.sideBarList[0].offsetHeight;
-        
         const listGroup = this.$refs.listGroup;
         let height = 0;
         listGroup.forEach((v)=> {
@@ -166,7 +175,6 @@ export default {
     },
     scroll(pos) {
       this.scrollY = pos.y;
-      console.log(this.scrollY);
     },
     classifySelect(e) {
       const selectIndex = e.target.dataset.index;
@@ -184,6 +192,7 @@ export default {
       this._scrollTo(selectIndex);
     },
     _scrollTo(selectIndex) {
+      this.scrollY = -this.listGroupHeightList[selectIndex];
       const classifyScroller = this.$refs.classifyScroller;
       const listGroup = this.$refs.listGroup;
       classifyScroller.scrollToElement(listGroup[selectIndex],0);
@@ -264,6 +273,15 @@ export default {
   	  width: 100%;
   	  top: 80/@rem;
   	  bottom: 0;
+      overflow: hidden;
+      .fix-title {
+        position: absolute;
+        width: 100%;
+        top: -1px;
+        left: 0;
+        z-index: 5;
+        background-color: #e5e5e5;
+      }
   	}
   	.classify-title {
   	  font-size: 32/@rem;
