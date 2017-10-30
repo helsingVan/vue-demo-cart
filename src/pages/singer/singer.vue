@@ -4,7 +4,7 @@
   	  <h2 class="title">{{singerHot.title}}</h2>
 	  <v-scroll :scrollX="true">
 	  	<ul class="clearfix">
-	  		<li v-for="item in singerHot.items" class="item" @click="toSingerDetail(item.id)">
+	  		<li v-for="item in singerHot.items" class="item" @click="toSingerDetail(item)">
 	  		  <figure>
 	  		  	<img :src="item.avatar" alt="">
 	  		  	<figcaption class="name">{{item.name}}</figcaption>
@@ -43,7 +43,7 @@
 <script>
 import { getSingerList } from '@/api/musicRequest';
 import vScroll from '@/components/scroll/scroll';
-
+import { mapMutations } from 'vuex';
 
 const HOT_SINGER_LEN = 10;
 const HOT_NAME = '热门';
@@ -123,12 +123,15 @@ export default {
         });
         return hot.concat(ret);
     },
-    toSingerDetail(id) {
-    	console.log(id);
+    toSingerDetail(item) {
       this.$router.push({
-      	path: `/singer/${id}`
+      	path: `/singer/${item.id}`
       });
-    }
+      this.setSinger(item);
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   },
   components: { vScroll }
 }

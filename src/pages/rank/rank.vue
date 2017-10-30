@@ -1,25 +1,6 @@
 <template>
   <transition name="slideRight">
-  	<div class="rank slide-page">
-	  <header class="header">
-	  	<h1>{{topInfo.ListName}}</h1>
-	  	<span class="iconfont icon-back back" @click="back"></span>
-	  </header>
-	  <div class="banner" :style="bgImage"></div>
-	  <section class="rank-list">
-	  	<v-scroll>
-		  	<ul>
-		  		<li v-for="item,index in songs" class="clearfix">
-		  		  <div class="index">{{index+1}}</div>
-				  <div class="content">
-				  	<p class="name">{{item.name}}</p>
-				  	<p class="singer">{{item.singer}}</p>
-				  </div>
-		  		</li>
-		  	</ul>
-		  </v-scroll>
-	  </section>
-	</div>
+	<music-list :data="songs" :title="title" :bgImage="bgImage"></music-list>
   </transition>
   
 </template>
@@ -27,12 +8,12 @@
 <script>
 import { getRankDetail } from '@/api/musicRequest';
 import { createSong } from '@/common/js/song';
-import vScroll from '@/components/scroll/scroll';
+import musicList from '@/components/list/music-list';
 
 export default {
   data() {
   	return {
-  	  topInfo: {},
+  	  title: '',
   	  songs: []
   	}
   },
@@ -52,7 +33,7 @@ export default {
   	  	if(data.code !== 0) {
   	  		return;
   	  	}
-  	  	this.topInfo = data.topinfo;
+  	  	this.title = data.topinfo.ListName;
   	  	this.songs = this._normalizeSongs(data.songlist);
   	  	console.log(this.songs);
   	  });
@@ -66,75 +47,13 @@ export default {
 	      }
 	    });
 	    return ret;
-	},
-  	back() {
-  	  this.$router.back();
-  	}
+	}
   },
-  components: { vScroll }
+  components: { musicList }
 }
 </script>
 
 <style lang="less">
 @import "../../common/less/mixin";
   
-  .rank {
-	.header {
-	  position: absolute;
-	  top: 0;
-	  left: 0;
-	  right: 0;
-	  > h1 {
-	  	font-size: 38/@rem;
-	  	text-align: center;
-	  	height: 100/@rem;
-	  	line-height: 100/@rem;
-	  	color: #fff;
-	  }
-	  .back {
-	  	position: absolute;
-	  	top: 0;
-	  	left: 20/@rem;
-	  	font-size: 40/@rem;
-	  	line-height: 100/@rem;
-	  }
-	}
-	.banner {
-	  background-repeat: no-repeat;
-	  background-position: center center;
-	  background-size: cover;
-	  height: 500/@rem;
-	}
-	.rank-list {
-	  position: fixed;
-	  width: 100%;
-	  left: 0;
-	  right: 0;
-	  bottom: 0;
-	  top: 500/@rem;
-	  ul {
-	  	padding: 90/@rem 60/@rem;
-	  }
-	  li {
-	  	margin-bottom: 50/@rem;
-	  	.index {
-	  	  float: left;
-	  	  margin-right: 10/@rem;
-	  	  min-width: 100/@rem;
-	  	  text-align: center;
-	  	  font-size: 40/@rem;
-	  	}
-	  	.content {
-	  	  font-size: 28/@rem;
-	  	  overflow: hidden;
-	  	}
-	  	p {
-	  	  overflow: hidden;
-	  	  text-overflow: ellipsis;
-	  	  white-space: nowrap;
-	  	}
-	  }
-	}
-  }
-
 </style>

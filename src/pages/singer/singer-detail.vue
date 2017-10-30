@@ -1,18 +1,32 @@
 <template>
   <transition name="slideRight">
-  	<div class="slide-page"></div>
+  	<music-list :data="songList" :title="title" :bgImage="bgImage"></music-list>
   </transition>
   
 </template>
 
 <script>
 import { getSingerDetail } from '@/api/musicRequest';
+import { createSong } from '@/common/js/song';
+import musicList from '@/components/list/music-list';
+import { mapGetters } from 'vuex';
 
 export default {
   data() {
   	return {
   	  songList: []
   	}
+  },
+  computed: {
+    title() {
+      return this.singer.name;
+    },
+    bgImage() {
+      return `background-image: url(${this.singer.avatar})`;
+    },
+    ...mapGetters([
+        'singer'
+      ])
   },
   mounted() {
   	this.getData();
@@ -23,6 +37,7 @@ export default {
   	  	if(data.code !== 0) {
   	  	  return;
   	  	}
+        console.log(data);
   	  	this.songList = this._normalizeSongs(data.data.list);
   	  	console.log(this.songList);
   	  });
@@ -36,8 +51,9 @@ export default {
 	      }
 	    });
 	    return ret;
-	}
-  }
+	  }
+  },
+  components: { musicList }
 }
 </script>
 
