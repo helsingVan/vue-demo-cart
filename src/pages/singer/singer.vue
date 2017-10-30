@@ -29,7 +29,7 @@
   	  	  	<li v-for="list in singerListSub" ref="listGroup">
   	  	  	  <h3 class="classify-title">{{list.title}}</h3>
   	  	  	  <ul class="singer">
-  	  	  	  	<li v-for="item in list.items">
+  	  	  	  	<li v-for="item in list.items" @click="toSingerDetail(item)">
   	  	  	  		<img :src="item.avatar" alt="" class="avatar">
   	  	  	  		<span class="name">{{item.name}}</span>
   	  	  	  	</li>
