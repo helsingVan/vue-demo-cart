@@ -37,7 +37,6 @@ export default {
   	  	if(data.code !== 0) {
   	  	  return;
   	  	}
-        console.log(data);
   	  	this.songList = this._normalizeSongs(data.data.list);
   	  	console.log(this.songList);
   	  });
