@@ -1,6 +1,6 @@
 <template>
   <transition name="slideRight">
-  	<music-list :data="songList" :title="title" :bgImage="bgImage"></music-list>
+  	<music-list :data="songList" :title="title" :bgImage="bgImage" @select="playStart"></music-list>
   </transition>
   
 </template>
@@ -9,7 +9,7 @@
 import { getSingerDetail } from '@/api/musicRequest';
 import { createSong } from '@/common/js/song';
 import musicList from '@/components/list/music-list';
-import { mapGetters } from 'vuex';
+import { mapGetters,mapActions } from 'vuex';
 
 export default {
   data() {
@@ -51,7 +51,16 @@ export default {
 	      }
 	    });
 	    return ret;
-	  }
+	  },
+    playStart(index) {
+      this.playStartAction({
+        list: this.songList,
+        index
+      });
+    },
+    ...mapActions([
+        'playStartAction'
+      ])
   },
   components: { musicList }
 }

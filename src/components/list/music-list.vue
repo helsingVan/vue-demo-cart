@@ -7,8 +7,8 @@
 	  <div class="banner" :style="bgImage"></div>
 	  <section class="list">
 	  	<v-scroll>
-		  	<ul>
-		  		<li v-for="item,index in data" class="clearfix">
+		  	<ul @click="select">
+		  		<li v-for="item,index in data" class="clearfix" :data-index="index">
 		  		  <div class="index">{{index+1}}</div>
 				  <div class="content">
 				  	<p class="name">{{item.name}}</p>
@@ -36,6 +36,16 @@ export default {
   methods: {
   	back() {
   	  this.$router.back();
+  	},
+  	select(e) {
+  	  let target = e.target;
+  	  let targetName = target.nodeName.toLowerCase();
+  	  while(targetName !== 'li') {
+  	  	target = target.parentNode;
+  	  	targetName = target.nodeName.toLowerCase();
+  	  }
+  	  const index = target.dataset.index;
+  	  this.$emit('select',index);
   	}
   },
   components: { vScroll }
