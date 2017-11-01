@@ -25,7 +25,7 @@ export default {
   watch: {
   	precent(newValue) {
   	  if(newValue && !this.hasTouchStart) {
-  	  	let offsetWidth = this.precent * this.$el.clientWidth;
+  	  	let offsetWidth = this.precent * (this.$el.clientWidth - 30);
   	    this._offset(offsetWidth);
   	  }
   	  
@@ -45,7 +45,7 @@ export default {
   	  const touches = e.touches[0];
   	  let moveX = this.touch.moveX = touches.pageX;
   	  let deltaX = moveX - this.touch.startX;
-  	  let offsetWidth = Math.min(this.$el.clientWidth,Math.max(0,this.touch.barWidth + deltaX));
+  	  let offsetWidth = Math.min(this.$el.clientWidth-30,Math.max(0,this.touch.barWidth + deltaX));
   	  this._offset(offsetWidth);
   	},
   	touchEnd() {
@@ -53,11 +53,13 @@ export default {
   	  this.emitPrecentChange();
   	},
   	clickBar(e) {
-  	  this._offset(e.offsetX);
+      let rect = this.$el.getBoundingClientRect();
+      let offsetWidth = e.pageX - rect.left;
+  	  this._offset(offsetWidth);
   	  this.emitPrecentChange();
   	},
   	emitPrecentChange() {
-  	  let precent = this.$refs.activeLine.clientWidth/this.$el.clientWidth;
+  	  let precent = this.$refs.activeLine.clientWidth/(this.$el.clientWidth-30);
   	  this.$emit('precentChange',precent);
   	},
   	_offset(offsetWidth) {

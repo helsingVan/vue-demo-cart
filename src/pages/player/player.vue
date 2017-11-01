@@ -28,8 +28,8 @@
 	  	  	<span class="time">{{currentSong.duration|formatTime}}</span>
 	  	</div>
   	  	<div class="control">
-  	  		<div class="play-mode">
-	  	  	  <i class="iconfont icon-shunxu"></i>
+  	  		<div class="play-mode" @click="playModeChange">
+	  	  	  <i class="iconfont" :class="playModeIcon"></i>
 	  	  	</div>
 	  	  	<div class="play-previous" @click="playPre" >
 	  	  	  <i class="iconfont icon-previous" :class="disabledClass"></i>
@@ -62,19 +62,21 @@
   	  	<i class="iconfont icon-musicmenu"></i>
   	  </div>
   	</div>
-  	<audio :src="currentSong.url" ref="audio" @canplay="audioReady" @timeupdate="audioUpdate"></audio>
+  	<audio :src="currentSong.url" ref="audio" @canplay="audioReady" @timeupdate="audioUpdate" @ended="audioEnd"></audio>
   </section>
 </template>
 
 <script>
 import { mapGetters,mapMutations } from 'vuex';
 import progressBar from '@/components/progress/progress-bar';
+import { randomArr } from '@/common/js/tool';
 
 export default {
   data() {
   	return {
   	  songReady: false,
   	  currentTime: 0,
+      playModeNum: 0
   	}
   },
   computed: {
@@ -87,6 +89,23 @@ export default {
   	playAnimate() {
   	  return this.playing?'animate': 'animate paused';
   	},
+    playModeIcon() {
+      let playMode = parseInt(this.playMode,10);
+      switch(playMode) {
+        case 0:
+          return 'icon-shunxu';
+          break;
+        case 1:
+          return 'icon-xunhuan';
+          break;
+        case 2:
+          return 'icon-suiji';
+          break;
+        default:
+          return '';
+          break;
+      }
+    },
   	precent() {
   	  return this.currentTime/this.currentSong.duration;
   	},
@@ -109,7 +128,7 @@ export default {
   	  	this.$refs.audio.play();
   	  });
   	  if(!this.playing) {
-  	  	this.setPlaying(!this.playing);
+  	  	this.togglePlay();
   	  }
   	},
   	playing(newPlaying) {
@@ -139,6 +158,14 @@ export default {
   	audioUpdate(e) {
   	  this.currentTime = e.target.currentTime;
   	},
+    audioEnd(e) {
+      if(this.playMode === 1) {
+        e.target.currentTime = 0;
+        e.target.play();
+      }else {
+        this.playNext();
+      }
+    },
   	togglePlay() {
   	  this.setPlaying(!this.playing);
   	},
@@ -164,6 +191,34 @@ export default {
   	  this.setCurrentIndex(currentIndex);
   	  this.songReady = false;
   	},
+    playModeChange() {
+      this.playModeNum++;
+      if(this.playModeNum > 2) {
+        this.playModeNum = 0;
+      }
+      this.setPlayMode(this.playModeNum);
+
+      let list = null;
+      switch(this.playMode){
+        case 0:
+          list = this.sequenceList;
+          break;
+        case 2:
+          list = randomArr(this.sequenceList);
+          break;
+        default:
+          return;
+          break;
+      }
+      this._keepCurrentSong(list);
+      this.setPlayList(list);
+    },
+    _keepCurrentSong(list) {
+      let currentIndex = list.findIndex((v)=> {
+        return v.id === this.currentSong.id;
+      });
+      this.setCurrentIndex(currentIndex);
+    },
     precentChange(precent) {
       let currentTime = this.currentSong.duration * precent;
       this.$refs.audio.currentTime = currentTime;
@@ -174,7 +229,9 @@ export default {
   	...mapMutations({
   	  setFullScreen: 'SET_FULLSCREEN',
   	  setPlaying: 'SET_PLAYING',
-  	  setCurrentIndex: 'SET_CURRENTINDEX'
+  	  setCurrentIndex: 'SET_CURRENTINDEX',
+      setPlayMode: 'SET_PLAYMODE',
+      setPlayList: 'SET_PLAYLIST'
   	})
   },
   components: { progressBar }
