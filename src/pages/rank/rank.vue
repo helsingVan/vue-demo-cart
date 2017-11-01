@@ -1,14 +1,16 @@
 <template>
   <transition name="slideRight">
-	<music-list :data="songs" :title="title" :bgImage="bgImage"></music-list>
+	  <music-list :data="songs" :title="title" :bgImage="bgImage"
+    @select="playStart" @emitPlay="playRandom"></music-list>
   </transition>
-  
 </template>
 
 <script>
 import { getRankDetail } from '@/api/musicRequest';
 import { createSong } from '@/common/js/song';
 import musicList from '@/components/list/music-list';
+import { mapGetters,mapActions } from 'vuex';
+import { randomArr } from '@/common/js/tool';
 
 export default {
   data() {
@@ -47,7 +49,23 @@ export default {
 	      }
 	    });
 	    return ret;
-	}
+	  },
+    playStart(index) {
+      console.log(index);
+      this.playStartAction({
+        list: this.songs,
+        index
+      });
+    },
+    playRandom() {
+      this.playRandomAction({
+        list: this.songs
+      });
+    },
+    ...mapActions([
+        'playStartAction',
+        'playRandomAction'
+      ])
   },
   components: { musicList }
 }

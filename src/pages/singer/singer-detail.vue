@@ -1,8 +1,8 @@
 <template>
   <transition name="slideRight">
-  	<music-list :data="songList" :title="title" :bgImage="bgImage" @select="playStart"></music-list>
+  	<music-list :data="songList" :title="title" :bgImage="bgImage"
+     @select="playStart" @emitPlay="playRandom"></music-list>
   </transition>
-  
 </template>
 
 <script>
@@ -10,6 +10,7 @@ import { getSingerDetail } from '@/api/musicRequest';
 import { createSong } from '@/common/js/song';
 import musicList from '@/components/list/music-list';
 import { mapGetters,mapActions } from 'vuex';
+import { randomArr } from '@/common/js/tool';
 
 export default {
   data() {
@@ -57,8 +58,14 @@ export default {
         index
       });
     },
+    playRandom() {
+      this.playRandomAction({
+        list: this.songList
+      });
+    },
     ...mapActions([
-        'playStartAction'
+        'playStartAction',
+        'playRandomAction'
       ])
   },
   components: { musicList }

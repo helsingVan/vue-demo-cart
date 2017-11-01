@@ -4,7 +4,9 @@
 	  	<h1>{{title}}</h1>
 	  	<span class="iconfont icon-back back" @click="back"></span>
 	  </header>
-	  <div class="banner" :style="bgImage"></div>
+	  <div class="banner" :style="bgImage">
+	  	<span class="play" @click="emitPlay">随机播放全部</span>
+	  </div>
 	  <section class="list">
 	  	<v-scroll>
 		  	<ul @click="select">
@@ -37,6 +39,9 @@ export default {
   	back() {
   	  this.$router.back();
   	},
+  	emitPlay() {
+  	  this.$emit('emitPlay');
+  	},
   	select(e) {
   	  let target = e.target;
   	  let targetName = target.nodeName.toLowerCase();
@@ -61,6 +66,7 @@ export default {
 	  top: 0;
 	  left: 0;
 	  right: 0;
+	  z-index: 10;
 	  > h1 {
 	  	font-size: 38/@rem;
 	  	text-align: center;
@@ -77,10 +83,22 @@ export default {
 	  }
 	}
 	.banner {
+	  position: relative;
+	  height: 500/@rem;
 	  background-repeat: no-repeat;
 	  background-position: center center;
 	  background-size: cover;
-	  height: 500/@rem;
+	  .play {
+	  	position: absolute;
+	  	left: 50%;
+	  	transform: translateX(-50%);
+	  	bottom: 32/@rem;
+	  	color: @themeColor;
+	  	padding: 20/@rem 32/@rem;
+	  	border: 2px solid @themeColor;
+	  	border-radius: 40/@rem;
+	  	font-size: 34/@rem;
+	  }
 	}
 	.list {
 	  position: fixed;

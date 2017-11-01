@@ -1,6 +1,6 @@
 <template>
   <div class="main home">
-    <v-scroll>
+    <v-scroll :data="topList">
       <div class="content">
         <section class="slider-box" v-if="slider.length>0">
           <v-slider>
@@ -77,6 +77,9 @@ export default {
   
   .home {
     top: 100/@rem;
+    .slider-box {
+      min-height: 300/@rem;
+    }
   }
   .rank-container {
     padding: 0 30/@rem;
@@ -85,8 +88,9 @@ export default {
   }
   .home-rank {
     margin-top: 30/@rem;
-    li {
+    > li {
       margin-bottom: 30/@rem;
+      min-height: 220/@rem;
     }
   }
 </style>

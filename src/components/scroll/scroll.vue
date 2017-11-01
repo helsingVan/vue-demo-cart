@@ -9,6 +9,7 @@ import IScroll from 'better-scroll';
 
 export default {
   props: {
+    data: {},
     scrollX: {
       type: Boolean,
       default() { return false;}
@@ -24,28 +25,36 @@ export default {
   },
   mounted() {
   	const self = this;
-  	setTimeout(()=>{
-  		self.init();
-  	},1000);
+  	this.$nextTick(()=> {
+      this.init();
+    })
+  },
+  watch: {
+    data() {
+      this.$nextTick(()=> {
+        this.refresh();
+      });
+    }
   },
   methods: {
   	init() {
       const self = this;
-  	  this.$nextTick(()=> {
-  	  	this.scroller = new IScroll(this.$el,{
+  	  setTimeout(()=> {
+        this.scroller = new IScroll(this.$el,{
           probeType: self.probeType,
           scrollX: self.scrollX,
-  	  		click: true
-  	  	});
-        console.log(this.scrollListener);
+          click: true
+        });
         if(this.scrollListener) {
           this.scroller.on('scroll',(pos)=> {
             self.$emit('scroll',pos);
           });
         }
-
-  	  });
+      },300);
   	},
+    refresh() {
+        this.scroll && this.scroll.refresh()
+    },
     scrollToElement() {
       this.scroller && this.scroller.scrollToElement.apply(this.scroller,arguments);
     }

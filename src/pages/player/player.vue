@@ -14,7 +14,7 @@
   	  	  <div class="circle" :class="playAnimate">
   	  	  	<img :src="currentSong.image" alt="">
   	  	  </div>
-  	  	  <div class="lyric">123123</div>
+  	  	  <div class="lyric"></div>
   	  	</div>
   	  	<div class="middle-r"></div>
   	  </section>
@@ -32,16 +32,16 @@
 	  	  	  <i class="iconfont" :class="playModeIcon"></i>
 	  	  	</div>
 	  	  	<div class="play-previous" @click="playPre" >
-	  	  	  <i class="iconfont icon-previous" :class="disabledClass"></i>
+	  	  	  <i class="iconfont icon-playpre" :class="disabledClass"></i>
 	  	  	</div>
 	  	  	<div class="play-start" @click="togglePlay">
 	  	  	  <i class="iconfont" :class="playingIcon"></i>
 	  	  	</div>
 	  	  	<div class="play-next" @click="playNext">
-	  	  	  <i class="iconfont icon-next" :class="disabledClass"></i>
+	  	  	  <i class="iconfont icon-playnext" :class="disabledClass"></i>
 	  	  	</div>
 	  	  	<div class="play-list">
-	  	  	  <i class="iconfont icon-xunhuan"></i>
+	  	  	  <i class="iconfont icon-xiai"></i>
 	  	  	</div>
   	  	</div>
   	  	
@@ -84,7 +84,7 @@ export default {
   	  return this.songReady?'': 'disabled';
   	},
   	playingIcon() {
-  	  return this.playing?'icon-pause':'icon-player';
+  	  return this.playing?'icon-pause':'icon-play';
   	},
   	playAnimate() {
   	  return this.playing?'animate': 'animate paused';
@@ -321,21 +321,34 @@ export default {
 			bottom: 100/@rem;
 			.control {
 				display: flex;
-			    justify-content: space-around;
+			  justify-content: center;
+        > div {
+          margin: 0 26/@rem;
+        }
+        .iconfont {
+          font-size: 60/@rem;
+          line-height: 1rem;
+        }
+        .play-start {
+          .iconfont {
+            font-size: 120/@rem;
+          }
+        }
+
 			}
 			.iconfont {
 				font-size: 50/@rem;
 			}
 			.progress {
 			  display: flex;
-			  margin: 40/@rem 80/@rem;
+			  margin: 40/@rem 60/@rem;
 			  .time {
 			  	font-size: 32/@rem;
 			  	flex: 0;
 			  }
 			  .bar {
 			  	flex: 1;
-			  	margin: 0 20/@rem;
+			  	margin: 0 30/@rem;
 			  }
 			}
 		}

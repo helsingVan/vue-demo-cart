@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <v-tab></v-tab>
-    <router-view/>
+    <keep-alive>
+    	<router-view/>
+    </keep-alive>
+    
     <player></player>
   </div>
 </template>

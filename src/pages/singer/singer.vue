@@ -24,7 +24,7 @@
         <header class="fix-title classify-title" v-show="fixTitle" ref="fixTitleEl">
           <h3>{{fixTitle}}</h3>
         </header>
-  	  	<v-scroll :scrollListener="true" @scroll="scroll" :probeType="3" ref="classifyScroller">
+  	  	<v-scroll :data="singerListSub" :scrollListener="true" @scroll="scroll" :probeType="3" ref="classifyScroller">
   	  	  <ul ref="singerListEl">
   	  	  	<li v-for="list in singerListSub" ref="listGroup">
   	  	  	  <h3 class="classify-title">{{list.title}}</h3>
@@ -88,7 +88,10 @@ export default {
   	this.getData();
   },
   mounted() {
-    this.caculateHeight();
+    this.$nextTick(()=> {
+      this.caculateHeight();
+    })
+    
   },
   watch: {
     scrollY(newY) {
@@ -171,7 +174,7 @@ export default {
           height += v.offsetHeight;
           this.listGroupHeightList.push(height);
         });
-      },20);
+      },50);
     },
     scroll(pos) {
       this.scrollY = pos.y;
@@ -293,7 +296,7 @@ export default {
   		padding: 20/@rem 0;
   		li {
   		  padding: 10/@rem 40/@rem;
-
+        min-height: 100/@rem;
   		}
 		.avatar {
 		  display: inline-block;

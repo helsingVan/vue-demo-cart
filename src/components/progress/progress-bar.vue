@@ -75,7 +75,7 @@ export default {
   
   .progress-bar {
     position: relative;
-	height: 100%;
+	  height: 100%;
   	.line {
 	  	width: 100%;
 	  	height: 10/@rem;
@@ -95,13 +95,13 @@ export default {
 	  	left: -8/@rem;
 	  	margin-top: -16/@rem;
 	  }
-	.active-line {
+	  .active-line {
 	    height: 10/@rem;
 	  	background-color: @themeColor;
 	  	position: absolute;
 	  	top: 50%;
 	  	margin-top: -5/@rem;
-	}
+	  }
   }
   
 </style>
