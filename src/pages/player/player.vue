@@ -23,7 +23,7 @@
   	  	<div class="progress">
 	  	  	<span class="time">{{currentTime|formatTime}}</span>
 	  	  	<div class="bar">
-	  	  	  <progress-bar :precent="precent"></progress-bar>
+	  	  	  <progress-bar :precent="precent" @precentChange="precentChange"></progress-bar>
 	  	  	</div>
 	  	  	<span class="time">{{currentSong.duration|formatTime}}</span>
 	  	</div>
@@ -164,6 +164,13 @@ export default {
   	  this.setCurrentIndex(currentIndex);
   	  this.songReady = false;
   	},
+    precentChange(precent) {
+      let currentTime = this.currentSong.duration * precent;
+      this.$refs.audio.currentTime = currentTime;
+      if(!this.playing) {
+        this.togglePlay();
+      }
+    },
   	...mapMutations({
   	  setFullScreen: 'SET_FULLSCREEN',
   	  setPlaying: 'SET_PLAYING',

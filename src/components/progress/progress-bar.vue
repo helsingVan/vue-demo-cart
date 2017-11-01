@@ -1,8 +1,11 @@
 <template>
-  <div class="progress-bar">
-  	<span class="line"></span>
+  <div class="progress-bar" @click="clickBar">
+  	<span class="line" ></span>
   	<span class="active-line" ref="activeLine"></span>
-  	<span class="point" ref="activePoint"></span>
+  	<span class="point" ref="activePoint"
+  	@touchstart="touchStart"
+  	@touchmove.prevent="touchMove"
+  	@touchend="touchEnd"></span>
   </div>
 </template>
 
@@ -11,14 +14,55 @@ export default {
   props: {
   	precent: {}
   },
+  data() {
+  	return {
+  	  touch: {},
+  	  hasTouchStart: false
+  	}
+  },
   mounted() {
   },
   watch: {
   	precent(newValue) {
-  	  let barWidth = this.$el.clientWidth;
-  	  let offsetWidth = this.precent * barWidth;
-  	  this.$refs.activeLine.style.width = `${this.precent*100}%`;
-  	  this.$refs.activePoint.style.transform = `translateX(${offsetWidth}px)`
+  	  if(newValue && !this.hasTouchStart) {
+  	  	let offsetWidth = this.precent * this.$el.clientWidth;
+  	    this._offset(offsetWidth);
+  	  }
+  	  
+  	}
+  },
+  methods: {
+  	touchStart(e) {
+  	  const touches = e.touches[0];
+  	  this.hasTouchStart = true;
+  	  this.touch.startX = touches.pageX;
+  	  this.touch.barWidth = this.$refs.activeLine.clientWidth;
+  	},
+  	touchMove(e) {
+  	  if(!this.hasTouchStart) {
+  	  	return;
+  	  }
+  	  const touches = e.touches[0];
+  	  let moveX = this.touch.moveX = touches.pageX;
+  	  let deltaX = moveX - this.touch.startX;
+  	  let offsetWidth = Math.min(this.$el.clientWidth,Math.max(0,this.touch.barWidth + deltaX));
+  	  this._offset(offsetWidth);
+  	},
+  	touchEnd() {
+  	  this.hasTouchStart = false;
+  	  this.emitPrecentChange();
+  	},
+  	clickBar(e) {
+  	  this._offset(e.offsetX);
+  	  this.emitPrecentChange();
+  	},
+  	emitPrecentChange() {
+  	  let precent = this.$refs.activeLine.clientWidth/this.$el.clientWidth;
+  	  this.$emit('precentChange',precent);
+  	},
+  	_offset(offsetWidth) {
+  	  this.$refs.activeLine.style.width = `${offsetWidth}px`;
+  	  this.$refs.activePoint.style.transform = `translateX(${offsetWidth}px)`;
   	}
   }
 }
