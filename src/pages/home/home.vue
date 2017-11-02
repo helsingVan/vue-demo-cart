@@ -5,7 +5,7 @@
         <section class="slider-box" v-if="slider.length>0">
           <v-slider>
             <ul class="clearfix">
-              <li v-for="item in slider">
+              <li v-for="(item,index) in slider" :key="index">
                 <a :href="item.linkUrl">
                   <img :src="item.picUrl" alt="">
                 </a>
@@ -15,7 +15,7 @@
         </section>
         <section class="rank-container">
           <ul class="home-rank">
-            <li v-for="item in topList" @click="toRank(item.id)">
+            <li v-for="(item,index) in topList" @click="toRank(item.id)" :key="index">
               <v-figure :data="item"></v-figure>
             </li>
           </ul>
@@ -30,7 +30,7 @@
 
 <script>
 import { getSlider, getRankList } from '@/api/musicRequest';
-import vSlider from '@/components/slider/slider';
+import vSlider from '@/components/slider/slider-scroll';
 import vFigure from '@/components/figure/figure-rank';
 import vScroll from '@/components/scroll/scroll';
 export default {
