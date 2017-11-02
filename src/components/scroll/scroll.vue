@@ -50,7 +50,7 @@ export default {
             self.$emit('scroll',pos);
           });
         }
-      },300);
+      },500);
   	},
     refresh() {
         this.scroll && this.scroll.refresh()

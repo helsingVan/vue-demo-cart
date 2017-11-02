@@ -8,7 +8,7 @@
 	  	<span class="play" @click="emitPlay">随机播放全部</span>
 	  </div>
 	  <section class="list">
-	  	<v-scroll>
+	  	<v-scroll :data="data">
 		  	<ul @click="select">
 		  		<li v-for="item,index in data" class="clearfix" :data-index="index">
 		  		  <div class="index">{{index+1}}</div>
@@ -112,6 +112,7 @@ export default {
 	  }
 	  li {
 	  	margin-bottom: 50/@rem;
+	  	min-height: 70/@rem;
 	  	.index {
 	  	  float: left;
 	  	  margin-right: 10/@rem;
