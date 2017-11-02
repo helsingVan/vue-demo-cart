@@ -23,6 +23,11 @@ export default {
       default() { return 0;}
     }
   },
+  computed: {
+    momentum() {
+      return this.scrollX?false:true;
+    }
+  },
   mounted() {
   	const self = this;
   	this.$nextTick(()=> {
@@ -43,6 +48,7 @@ export default {
         this.scroller = new IScroll(this.$el,{
           probeType: self.probeType,
           scrollX: self.scrollX,
+          // momentum: this.momentum,
           click: true
         });
         if(this.scrollListener) {

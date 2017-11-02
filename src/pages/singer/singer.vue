@@ -213,7 +213,7 @@ export default {
 
   .singer {
   	.title {
-  	  font-size: 40/@rem;
+  	  font-size: 32/@rem;
   	  padding: 0 40/@rem;
   	  height: 80/@rem;
   	  line-height: 80/@rem;
@@ -223,19 +223,19 @@ export default {
   .singer-hot {
   	padding: 0 5/@rem;
   	overflow: hidden;
-  	height: 340/@rem;
   	ul {
   		min-width: 2000/@rem;
   	}
   	.item {
-	  float: left;
-	  width: 200/@rem;
+	    float: left;
+      width: 200/@rem;
+      text-align: center;
   	  img {
-  	  	width: 160/@rem;
+  	  	width: 140/@rem;
   	  	border-radius: 50%;
   	  }
   	  .name {
-  	  	width: 160/@rem;
+  	  	width: 100%;
   	  	color: @textColor;
   	  	font-size: 26/@rem;
   	  	text-align: center;
@@ -247,16 +247,16 @@ export default {
   	}
   }
   .singer-classify {
-	position: absolute;
-	width: 100%;
-	top: 340/@rem;
-	bottom: 0;
+	  position: absolute;
+	  width: 100%;
+	  top: 300/@rem;
+	  bottom: 0;
   	.sidebar {
   	  position: absolute;
   	  right: 0;
   	  top: 80/@rem;
   	  color: @textColor;
-  	  font-size: 28/@rem;
+  	  font-size: 26/@rem;
   	  background-color: rgba(0,0,0,.1);
   	  padding: 10/@rem 0;
   	  border-radius: 20/@rem;
@@ -264,8 +264,8 @@ export default {
   	  li {
   	  	width: 40/@rem;
   	  	text-align: center;
-  	  	height: 36/@rem;
-        line-height: 36/@rem;
+  	  	height: 30/@rem;
+        line-height: 30/@rem;
         &.active {
           color: @themeColor;
         }
@@ -306,7 +306,7 @@ export default {
 		  margin-right: 10/@rem;
 		}
 		.name {
-		  font-size: 28/@rem;
+		  font-size: 26/@rem;
 		  color: @textColor;
 		}
   	}
