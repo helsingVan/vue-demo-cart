@@ -26,7 +26,8 @@ export default {
 @import "../../common/less/mixin";
 
   .figure-rank {
-  	overflow: hidden;
+		overflow: hidden;
+		background-color: @rankColor;
   	img {
   	  float: left;
   	  margin-right: 30/@rem;

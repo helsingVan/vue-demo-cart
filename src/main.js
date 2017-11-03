@@ -7,6 +7,7 @@ import store from './store';
 Vue.config.productionTip = false
 
 import './common/less/common.less';
+// import './common/js/bg';
 
 Vue.use(VueLazyLoad)
 /* eslint-disable no-new */
