@@ -82,7 +82,7 @@ export default {
     }
   }
   .rank-container {
-    padding: 0 30/@rem;
+    padding: 0 30/@rem 100/@rem 30/@rem;
 
 
   }

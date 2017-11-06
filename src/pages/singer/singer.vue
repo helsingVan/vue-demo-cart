@@ -283,14 +283,14 @@ export default {
         top: -1px;
         left: 0;
         z-index: 5;
-        background-color: #e5e5e5;
+        background-color: #2C2B2B;
       }
   	}
   	.classify-title {
   	  font-size: 32/@rem;
   	  color: @textColor;
   	  padding: 20/@rem 40/@rem;
-  	  background-color: rgba(0,0,0,.1);	
+  	  background-color: rgba(0,0,0,.3);	
   	}
   	.singer {
   		padding: 20/@rem 0;
@@ -308,7 +308,7 @@ export default {
 		.name {
 		  font-size: 26/@rem;
 		  color: @textColor;
-		}
+		 }
   	}
   	
   }
