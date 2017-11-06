@@ -34,3 +34,27 @@ export const playRandomAction = ({commit,state},{list}) => {
   commit(types.SET_PLAYMODE,2);
   commit(types.SET_PLAYLIST,list);
 }
+
+// 删除歌曲列表歌曲
+export const deleteSong = function ({commit, state}, song) {
+  let playList = state.playList.slice()
+  let sequenceList = state.sequenceList.slice()
+  let currentIndex = state.currentIndex
+  let pIndex = findIndex(playList, song)
+  playList.splice(pIndex, 1)
+  let sIndex = findIndex(sequenceList, song)
+  sequenceList.splice(sIndex, 1)
+  if (currentIndex > pIndex || currentIndex === playList.length) {
+    currentIndex--
+  }
+
+  commit(types.SET_PLAYLIST, playList)
+  commit(types.SET_SEQUENCELIST, sequenceList)
+  commit(types.SET_CURRENTINDEX, currentIndex)
+
+  if (!playList.length) {
+    commit(types.SET_PLAYING, false)
+  } else {
+    commit(types.SET_PLAYING, true)
+  }
+}

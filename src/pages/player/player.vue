@@ -58,10 +58,11 @@
   	  <div class="play-start" @click="togglePlay">
   	  	<i class="iconfont" :class="playingIcon"></i>
   	  </div>
-  	  <div class="play-menu">
+  	  <div class="play-menu" @click="showPlayerList">
   	  	<i class="iconfont icon-musicmenu"></i>
   	  </div>
   	</div>
+		<player-list ref="playList"></player-list>
   	<audio :src="currentSong.url" ref="audio" @canplay="audioReady" @timeupdate="audioUpdate" @ended="audioEnd"></audio>
   </section>
 </template>
@@ -69,6 +70,7 @@
 <script>
 import { mapGetters,mapMutations } from 'vuex';
 import progressBar from '@/components/progress/progress-bar';
+import playerList from '@/components/list/player-list';
 import { randomArr } from '@/common/js/tool';
 
 export default {
@@ -225,7 +227,10 @@ export default {
       if(!this.playing) {
         this.togglePlay();
       }
-    },
+		},
+		showPlayerList() {
+			this.$refs.playList.show();
+		},
   	...mapMutations({
   	  setFullScreen: 'SET_FULLSCREEN',
   	  setPlaying: 'SET_PLAYING',
@@ -234,7 +239,7 @@ export default {
       setPlayList: 'SET_PLAYLIST'
   	})
   },
-  components: { progressBar }
+  components: { progressBar,playerList }
 }
 </script>
 

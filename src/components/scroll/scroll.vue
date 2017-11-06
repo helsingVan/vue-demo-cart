@@ -59,7 +59,7 @@ export default {
       },500);
   	},
     refresh() {
-        this.scroll && this.scroll.refresh()
+        this.scroller && this.scroller.refresh()
     },
     scrollToElement() {
       this.scroller && this.scroller.scrollToElement.apply(this.scroller,arguments);
