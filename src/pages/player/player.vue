@@ -1,52 +1,55 @@
 <template>
   <section class="player" v-show="playList.length>0">
-  	<div class="normal-player" v-show="fullScreen">
-  	  <div class="bg">
-  	  	<img :src="currentSong.image" alt="">
-  	  </div>
-  	  <header class="header">
-  	  	<h1>{{currentSong.name}}</h1>
-  	  	<p>{{currentSong.singer}}</p>
-  	  	<i class="iconfont icon-bottom" @click="setFullScreen(false)"></i>
-  	  </header>
-  	  <section class="middle">
-  	  	<div class="middle-l">
-  	  	  <div class="circle" :class="playAnimate">
-  	  	  	<img :src="currentSong.image" alt="">
-  	  	  </div>
-  	  	  <div class="lyric"></div>
-  	  	</div>
-  	  	<div class="middle-r"></div>
-  	  </section>
-  	  
-  	  <section class="bottom">
-  	  	<div class="progress">
-	  	  	<span class="time">{{currentTime|formatTime}}</span>
-	  	  	<div class="bar">
-	  	  	  <progress-bar :precent="precent" @precentChange="precentChange"></progress-bar>
-	  	  	</div>
-	  	  	<span class="time">{{currentSong.duration|formatTime}}</span>
-	  	</div>
-  	  	<div class="control">
-  	  		<div class="play-mode" @click="playModeChange">
-	  	  	  <i class="iconfont" :class="playModeIcon"></i>
-	  	  	</div>
-	  	  	<div class="play-previous" @click="playPre" >
-	  	  	  <i class="iconfont icon-playpre" :class="disabledClass"></i>
-	  	  	</div>
-	  	  	<div class="play-start" @click="togglePlay">
-	  	  	  <i class="iconfont" :class="playingIcon"></i>
-	  	  	</div>
-	  	  	<div class="play-next" @click="playNext">
-	  	  	  <i class="iconfont icon-playnext" :class="disabledClass"></i>
-	  	  	</div>
-	  	  	<div class="play-list">
-	  	  	  <i class="iconfont icon-xiai"></i>
-	  	  	</div>
-  	  	</div>
-  	  	
-  	  </section>
-  	</div>
+    <transition name="fadeIn">
+      <div class="normal-player" v-show="fullScreen">
+        <div class="bg">
+          <img :src="currentSong.image" alt="">
+        </div>
+        <header class="header">
+          <h1>{{currentSong.name}}</h1>
+          <p>{{currentSong.singer}}</p>
+          <i class="iconfont icon-bottom" @click="setFullScreen(false)"></i>
+        </header>
+        <section class="middle">
+          <div class="middle-l">
+            <div class="circle" :class="playAnimate">
+              <img :src="currentSong.image" alt="">
+            </div>
+            <div class="lyric"></div>
+          </div>
+          <div class="middle-r"></div>
+        </section>
+        
+        <section class="bottom">
+          <div class="progress">
+            <span class="time">{{currentTime|formatTime}}</span>
+            <div class="bar">
+              <progress-bar :precent="precent" @precentChange="precentChange"></progress-bar>
+            </div>
+            <span class="time">{{currentSong.duration|formatTime}}</span>
+        </div>
+          <div class="control">
+            <div class="play-mode" @click="playModeChange">
+              <i class="iconfont" :class="playModeIcon"></i>
+            </div>
+            <div class="play-previous" @click="playPre" >
+              <i class="iconfont icon-playpre" :class="disabledClass"></i>
+            </div>
+            <div class="play-start" @click="togglePlay">
+              <i class="iconfont" :class="playingIcon"></i>
+            </div>
+            <div class="play-next" @click="playNext">
+              <i class="iconfont icon-playnext" :class="disabledClass"></i>
+            </div>
+            <div class="play-list" @click="xiai">
+              <i class="iconfont icon-xiai"></i>
+            </div>
+          </div>
+          
+        </section>
+      </div>
+    </transition>
+  	
   	<div class="mini-player" v-show="!fullScreen">
   	  <div class="figure" @click="setFullScreen(true)">
   	  	<img :src="currentSong.image" alt="" :class="playAnimate">
@@ -64,6 +67,7 @@
   	</div>
 		<player-list ref="playList"></player-list>
   	<audio :src="currentSong.url" ref="audio" @canplay="audioReady" @timeupdate="audioUpdate" @ended="audioEnd"></audio>
+    <v-dialog ref="dialog" data="暂时收藏不了哦"></v-dialog>
   </section>
 </template>
 
@@ -72,6 +76,7 @@ import { mapGetters,mapMutations } from 'vuex';
 import progressBar from '@/components/progress/progress-bar';
 import playerList from '@/components/list/player-list';
 import { randomArr } from '@/common/js/tool';
+import vDialog from '@/components/layer/dialog';
 
 export default {
   data() {
@@ -231,6 +236,10 @@ export default {
 		showPlayerList() {
 			this.$refs.playList.show();
 		},
+    xiai() {
+      console.log(this.$refs.dialog);
+      this.$refs.dialog.show();
+    },
   	...mapMutations({
   	  setFullScreen: 'SET_FULLSCREEN',
   	  setPlaying: 'SET_PLAYING',
@@ -239,7 +248,7 @@ export default {
       setPlayList: 'SET_PLAYLIST'
   	})
   },
-  components: { progressBar,playerList }
+  components: { progressBar,playerList,vDialog }
 }
 </script>
 

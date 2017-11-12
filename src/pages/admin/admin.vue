@@ -13,7 +13,9 @@
 	  	  </section>
 	  	  <section class="list">
 	  	  	<ul>
-	  	  	  <li>关于app</li>
+	  	  	  <li @click="goAbout">
+	  	  	  	关于app
+	  	  	  </li>
 	  	  	</ul>
 	  	  </section>
 	  	  <section class="copyright">
@@ -62,6 +64,12 @@ export default {
   	  if(delta > 200) {
   	  	this.showFlag = false;
   	  }
+  	},
+  	goAbout() {
+  	  this.showFlag = false;
+  	  this.$router.push({
+  	  	path: '/about-app'
+  	  });
   	}
   }
 }

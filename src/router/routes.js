@@ -35,6 +35,12 @@ const Board = (resolve) => {
   })
 }
 
+const aboutApp = (resolve) => {
+  import('@/pages/about/about-app').then((module) => {
+    resolve(module);
+  })
+}
+
 const routes = [
 	{path:'/',redirect:'/home'},
 	{path:'/home',name:'Home',component:Home,children:[
@@ -44,7 +50,8 @@ const routes = [
     {path: ':id',name: 'SingerDetail',component: SingerDetail}
   ]},
 	{path:'/search',name:'Search',component:Search},
-  {path:'/board',name:'Board',component:Board}
+  {path:'/board',name:'Board',component:Board},
+  {path:'/about-app',name:'aboutApp',component:aboutApp}
 ];
 
 export default routes;

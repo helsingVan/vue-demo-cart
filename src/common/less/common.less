@@ -25,6 +25,17 @@ body {
 	background: #fff;
 	z-index: 100;
 }
+.single-page {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 1000;
+}
+
 
 .slideRight-enter-active,
   .slideRight-leave-active {
@@ -34,6 +45,15 @@ body {
   .slideRight-leave-to {
   	transform: translate3d(100%, 0, 0);
   }
+
+.fadeIn-enter-active,
+.fadeIn-leave-active {
+	transition: all .5s ease;
+}
+.fadeIn-enter,
+.fadeIn-leave-to {
+  opacity: 0;
+}
 
 @keyframes circle {
   from {
