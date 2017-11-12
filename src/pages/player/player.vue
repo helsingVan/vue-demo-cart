@@ -66,7 +66,8 @@
   	  </div>
   	</div>
 		<player-list ref="playList"></player-list>
-  	<audio :src="currentSong.url" ref="audio" @canplay="audioReady" @timeupdate="audioUpdate" @ended="audioEnd"></audio>
+  	<audio :src="currentSong.url" ref="audio" @canplay="audioReady" @timeupdate="audioUpdate" @ended="audioEnd" preload
+     @canplaythrough="audioReady" @error="error" @webkitcanplay="audioReady"></audio>
     <v-dialog ref="dialog" data="暂时收藏不了哦"></v-dialog>
   </section>
 </template>
@@ -131,9 +132,13 @@ export default {
   	  if(newSong.id === oldSong.id) {
   	  	return;
   	  }
-  	  this.$nextTick(()=> {
-  	  	this.$refs.audio.play();
-  	  });
+  	  // this.$nextTick(()=> {
+  	  // 	this.$refs.audio.play();
+  	  // });
+      setTimeout(()=>{
+        this.$refs.audio.play();
+        alert(this.$refs.audio.networkState);
+      },500);
   	  if(!this.playing) {
   	  	this.togglePlay();
   	  }
@@ -160,6 +165,7 @@ export default {
   },
   methods: {
   	audioReady() {
+      alert('canplay');
   	  this.songReady = true;
   	},
   	audioUpdate(e) {
@@ -239,6 +245,9 @@ export default {
     xiai() {
       console.log(this.$refs.dialog);
       this.$refs.dialog.show();
+    },
+    error() {
+      alert('error');
     },
   	...mapMutations({
   	  setFullScreen: 'SET_FULLSCREEN',
