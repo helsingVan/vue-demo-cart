@@ -6,8 +6,8 @@
           <span>播放队列</span>
           <span>{{sequenceList.length}}</span>
         </div>
-        <div class="icon iconfont" :class="playModeIcon"></div>
-        <div class="icon iconfont icon-shanchu"></div>
+        <!-- <div class="icon iconfont" :class="playModeIcon"></div>
+        <div class="icon iconfont icon-shanchu"></div> -->
       </header>
       <div class="content">
         <v-scroll :data="sequenceList" ref="playerList">

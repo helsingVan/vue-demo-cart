@@ -29,6 +29,11 @@ const Rank = (resolve) => {
   });
 };
 
+const Board = (resolve) => {
+  import('@/pages/board/board').then((module) => {
+    resolve(module);
+  })
+}
 
 const routes = [
 	{path:'/',redirect:'/home'},
@@ -38,7 +43,8 @@ const routes = [
 	{path:'/singer',name:'Singer',component:Singer,children:[
     {path: ':id',name: 'SingerDetail',component: SingerDetail}
   ]},
-	{path:'/search',name:'Search',component:Search}
+	{path:'/search',name:'Search',component:Search},
+  {path:'/board',name:'Board',component:Board}
 ];
 
 export default routes;

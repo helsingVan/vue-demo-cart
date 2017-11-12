@@ -367,6 +367,7 @@ export default {
       z-index: 1000;
       display: flex;
       background-color: #fff;
+      padding-top: 10/@rem;
       .figure {
       	flex: 0 0 100/@rem;
       	margin: 0 30/@rem;
@@ -403,7 +404,7 @@ export default {
       }
       .play-menu {
       	flex: 0 0 60/@rem;
-      	margin-right: 10/@rem;
+      	margin-right: 30/@rem;
       	.iconfont {
       	  font-size: 50/@rem;
       	}

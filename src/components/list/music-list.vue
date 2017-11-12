@@ -80,6 +80,7 @@ export default {
 	  	left: 20/@rem;
 	  	font-size: 40/@rem;
 	  	line-height: 100/@rem;
+	  	color: #fff;
 	  }
 	}
 	.banner {
