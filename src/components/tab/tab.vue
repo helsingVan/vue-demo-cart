@@ -1,10 +1,11 @@
 <template>
   <nav class="tab">
-  	<a href="javasript:;" v-for="item,index in tabData"
-    @click="goTo(index,item.url)" :class="{active:activeIndex===index}">{{item.text}}</a>
+  	<!-- <a href="javasript:;" v-for="item,index in tabData"
+    @click="goTo(index,item.url)" :class="{active:activeIndex===index}">{{item.text}}</a> -->
     <!-- <router-link v-for="item,index in tabData" :to="item.url">{{item.text}}</router-link> -->
     <!-- <span class="active-bar" ref="activeBar"></span> -->
-    <i class="iconfont icon-me"></i>
+    <router-link v-for="item in tabData" :to="item.url">{{item.text}}</router-link>
+    <i class="iconfont icon-me" @click="emitClick"></i>
   </nav>
 </template>
 
@@ -28,6 +29,9 @@ export default {
       // bar.style.transform = `translateX(${translate})`;
       this.activeIndex = index;
       this.$router.push({path: url});
+    },
+    emitClick() {
+      this.$emit('emitClick');
     }
   },
   beforeRouteUpdate(to,from,next) {
