@@ -22,29 +22,29 @@
         
         <section class="bottom">
           <div class="progress">
-            <span class="time">{{currentTime|formatTime}}</span>
-            <div class="bar">
-              <progress-bar :precent="precent" @precentChange="precentChange"></progress-bar>
-            </div>
-            <span class="time">{{currentSong.duration|formatTime}}</span>
-        </div>
-          <div class="control">
-            <div class="play-mode" @click="playModeChange">
-              <i class="iconfont" :class="playModeIcon"></i>
-            </div>
-            <div class="play-previous" @click="playPre" >
-              <i class="iconfont icon-playpre" :class="disabledClass"></i>
-            </div>
-            <div class="play-start" @click="togglePlay">
-              <i class="iconfont" :class="playingIcon"></i>
-            </div>
-            <div class="play-next" @click="playNext">
-              <i class="iconfont icon-playnext" :class="disabledClass"></i>
-            </div>
-            <div class="play-list" @click="xiai">
-              <i class="iconfont icon-xiai"></i>
-            </div>
+              <span class="time">{{currentTime|formatTime}}</span>
+              <div class="bar">
+                <progress-bar :precent="precent" @precentChange="precentChange"></progress-bar>
+              </div>
+              <span class="time">{{currentSong.duration|formatTime}}</span>
           </div>
+            <div class="control">
+              <div class="play-mode" @click="playModeChange">
+                <i class="iconfont" :class="playModeIcon"></i>
+              </div>
+              <div class="play-previous" @click="playPre" >
+                <i class="iconfont icon-playpre" :class="disabledClass"></i>
+              </div>
+              <div class="play-start" @click="togglePlay">
+                <i class="iconfont" :class="playingIcon"></i>
+              </div>
+              <div class="play-next" @click="playNext">
+                <i class="iconfont icon-playnext" :class="disabledClass"></i>
+              </div>
+              <div class="play-list" @click="xiai">
+                <i class="iconfont icon-xiai"></i>
+              </div>
+            </div>
           
         </section>
       </div>
