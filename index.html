@@ -16,5 +16,100 @@
   <body>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+
+    <script>
+function Node(element) {
+  this.element = element;
+  this.next = null;
+}
+function LinkList () {
+  this.length = 0;
+  this.head = null;
+}
+LinkList.prototype.append = function (element) {
+  var node = new Node(element);
+  var current = null;
+  if (!this.head) {
+    this.head = node;
+  } else {
+    current = this.head;
+
+    while(current.next) {
+      current = current.next;
+    }
+
+    current.next = node;
+  }
+  this.length++;  
+}
+LinkList.prototype.removeAt = function (position) {
+  if (position < 0 || position >= this.length) {
+    return null;
+  }
+  var current = this.head;
+  var previous = null;
+  var index = 0;
+  if (position === 0) {
+    this.head = current.next;
+  } else {
+    while (index++ < position) {
+      previous = current;
+      current = current.next;
+    }
+    previous.next = current.next;
+  }
+  this.length--;
+  return current.element;
+}
+LinkList.prototype.insert = function (position, element) {
+  if (position < 0 || position >= this.length) {
+    return null;
+  }
+  var node = new Node(element);
+  var current = this.head;
+  var previous = null;
+  var index = 0;
+  if (position === 0) {
+    node.next = current;
+    this.head = node;
+  } else {
+    while (index++ < position) {
+      previous = current;
+      current = current.next;
+    }
+    previous.next = node;
+    node.next = current;
+  }
+  this.length++;
+  return true;
+}
+LinkList.prototype.indexOf = function (element) {
+  var current = this.head;
+  var index = -1;
+  while (current) {
+    index++;
+    if (current.element === element) {
+      return index;
+    }
+    
+    current = current.next;
+  }
+  return -1;
+}
+LinkList.prototype.remove = function (element) {
+  var index = this.indexOf(element);
+  return this.removeAt(index);
+}
+var linkList = new LinkList();
+linkList.append(10);
+linkList.append(11);
+linkList.append(12);
+linkList.append(13);
+linkList.append(14);
+console.log(linkList.remove(20));
+console.log(linkList);
+
+
+    </script>
   </body>
 </html>
