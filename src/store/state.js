@@ -9,4 +9,6 @@ const state = {
   currentIndex: 0			// 当前播放歌曲索引
 };
 
+
+
 export default state;
